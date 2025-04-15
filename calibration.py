@@ -316,6 +316,7 @@ def doBlindSpotMapping(ID=None,task=None,location=None):
     trackEyes = [True, True]
 
     setup = localizeSetup(location=location, glasses=glasses, trackEyes=trackEyes, filefolder=None, filename=None, task=task, ID=ID) # data path is for the mapping data, not the eye-tracker data!
+    # setup = localizeSetup(location=location, glasses=glasses, trackEyes=trackEyes, filefolder=None, filename=None, task=task, ID=ID, noEyeTracker=True) # data path is for the mapping data, not the eye-tracker data!
     print(setup['paths'])
 
     colors = setup['colors']
