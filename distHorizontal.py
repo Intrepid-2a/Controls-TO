@@ -135,10 +135,10 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
         x += 1
 
     # get everything shared from central:
-    # setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distHorizontal', ID=ID) # data path is for the mapping data, not the eye-tracker data!
+    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distHorizontal', ID=ID) # data path is for the mapping data, not the eye-tracker data!
 
-    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distHorizontal', ID=ID, noEyeTracker=True ) # data path is for the mapping data, not the eye-tracker data!
-    print(setup['paths']) # not using yet, just testing
+    # setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distHorizontal', ID=ID, noEyeTracker=True ) # data path is for the mapping data, not the eye-tracker data!
+    # print(setup['paths']) # not using yet, just testing
 
     # unpack all this
     win = setup['win']
@@ -169,7 +169,7 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
     
     fixation = setup['fixation']
 
-    # tracker = setup['tracker']
+    tracker = setup['tracker']
     
 
 
@@ -279,11 +279,11 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
     event.clearEvents(eventType='keyboard') # just to be sure?
         
     #!!# calibrate
-    #tracker.initialize() # this should be done in the central thing... dependent on location: in Toronto we need to override the calibrationTargets
+    ####tracker.initialize() # this should be done in the central thing... dependent on location: in Toronto we need to override the calibrationTargets
 
-    # tracker.openfile()
-    # tracker.startcollecting()
-    # tracker.calibrate()
+    tracker.openfile()
+    tracker.startcollecting()
+    tracker.calibrate()
     
     fixation.draw()
     win.flip()
@@ -390,7 +390,7 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
         loFusion.resetProperties()
 
         ## pre trial fixation
-        # tracker.waitForFixation()
+        tracker.waitForFixation()
         gaze_out = False #? not sure what this variable is for but it needs to exist?
 
         # not sure, but the next while loop seems to be doing the same thing as "waitForFixation()"
@@ -428,7 +428,7 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
         #         break
         
         # should the trial start be here, or maybe when waiting for fixation?
-        # tracker.comment('start trial %d'%(trial))
+        tracker.comment('start trial %d'%(trial))
 
         # in reverse order, so we can pop() them off:
         stim_comments = ['pair 2 off', 'pair 1 off', 'pair 2 on', 'pair 1 on']
@@ -452,10 +452,10 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
                 #!!# if position is invalid or >2 dva, set gaze in region to False
                 #!!# may also record gazes in file here and do stuff like showing gaze position if simulating with mouse
                 
-                # if not tracker.gazeInFixationWindow():
-                #     gaze_out = True
-                #     tracker.comment('trial aborted')
-                #     break
+                if not tracker.gazeInFixationWindow():
+                    gaze_out = True
+                    tracker.comment('trial aborted')
+                    break
 
                 fixation.draw()
                 blindspot.draw()
@@ -463,20 +463,20 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
                 loFusion.draw()
 
                 if .1 <= trial_clock.getTime() < .5:
-                    # if len(stim_comments) == 4:
-                    #     tracker.comment(stim_comments.pop()) # pair 1 on
+                    if len(stim_comments) == 4:
+                        tracker.comment(stim_comments.pop()) # pair 1 on
                     point_1.draw()
                     point_2.draw()
                 elif .5 <= trial_clock.getTime() < 0.9:
-                    # if len(stim_comments) == 3:
-                    #     tracker.comment(stim_comments.pop()) # pair 2 on
+                    if len(stim_comments) == 3:
+                        tracker.comment(stim_comments.pop()) # pair 2 on
                     point_1.draw()
                     point_2.draw()
                     point_3.draw()
                     point_4.draw()
                 elif 0.9 <= trial_clock.getTime() < 1.3:
-                    # if len(stim_comments) == 2:
-                    #     tracker.comment(stim_comments.pop()) # pair 1 off
+                    if len(stim_comments) == 2:
+                        tracker.comment(stim_comments.pop()) # pair 1 off
                     point_3.draw()
                     point_4.draw()
         
@@ -486,13 +486,13 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
                 k = event.getKeys(['q']) # shouldn't this be space? like after the stimulus? this is confusing...
                 if k and 'q' in k:
                     abort = True
-                    # tracker.comment('trial aborted') # task aborted?
+                    tracker.comment('trial aborted') # task aborted?
                     break
                 
                 event.clearEvents(eventType='keyboard') # just to be sure?
 
-            # if len(stim_comments) == 1:
-            #     tracker.comment(stim_comments.pop()) # pair 2 off
+            if len(stim_comments) == 1:
+                tracker.comment(stim_comments.pop()) # pair 2 off
 
         if abort:
             break
@@ -515,7 +515,7 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
 
             if k[0] in ['q']:
                 abort = True
-                # tracker.comment('trial aborted') # this could be more like: "task aborted"?
+                tracker.comment('trial aborted') # this could be more like: "task aborted"?
                 break
                 #! empty buffer?
             elif k[0] in ['space', 'num_insert']:
@@ -524,11 +524,11 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
                 resp = 'abort'
                 targ_chosen = 'abort'
                 reversal = 'abort'
-                # tracker.comment('trial aborted')
+                tracker.comment('trial aborted')
                 #! empty buffer?
             else:
                 resp = 1 if k[0] in ['left', 'num_left'] else 2
-                # tracker.comment('response')
+                tracker.comment('response')
                 #! empty buffer?
 
             event.clearEvents(eventType='keyboard') # just to be sure?
@@ -555,7 +555,7 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
                     
                 #!!# calibrate
                 #### tracker.stopcollecting() # do we even have to stop/start collecting?
-                # tracker.calibrate()
+                tracker.calibrate()
                 #### tracker.startcollecting()
                 recalibrate = False
 
@@ -599,7 +599,7 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
 
                     #!!# calibrate
                     #### tracker.stopcollecting() # do we even have to stop/start collecting?
-                    # tracker.calibrate()
+                    tracker.calibrate()
                     #### tracker.startcollecting()
 
                     fixation.draw()
@@ -685,7 +685,7 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
             breaktext.draw()
             win.flip()
             
-            # tracker.comment('break')
+            tracker.comment('break')
 
             on_break = True
             while on_break:
@@ -698,7 +698,7 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
             event.clearEvents(eventType='keyboard') # just to be sure?
 
 
-            # tracker.calibrate()
+            tracker.calibrate()
             break_trial = 1
 
         event.clearEvents(eventType='keyboard') # just to be more sure?
@@ -708,12 +708,12 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
         respFile = open(respFileName,'a')
         respFile.write("Run manually ended at " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M") + "!")
         respFile.close()
-        # tracker.comment('run aborted')
+        tracker.comment('run aborted')
         # stop collecting?
         # close file?
         # shutdown eye-tracker?
     elif not any(stairs_ongoing):
-        # tracker.comment('run finished')
+        tracker.comment('run finished')
         print('run ended properly!')
 
     print(datetime.datetime.now().strftime("%Y-%m-%d-%H-%M"))
@@ -721,9 +721,9 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
 
     #!!# stop recording
 
-    # tracker.stopcollecting()
-    # tracker.closefile()
-    # tracker.shutdown()
+    tracker.stopcollecting()
+    tracker.closefile()
+    tracker.shutdown()
 
 
     ## last screen
