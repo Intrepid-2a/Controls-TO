@@ -180,7 +180,7 @@ def doDistBinocularTask(ID=None, hemifield=None, location=None):
     hiFusion = setup['fusion']['hi']
     loFusion = setup['fusion']['lo']
 
-    blindspot = setup['blindspotmarkers'][hemifield]
+    # blindspot = setup['blindspotmarkers'][hemifield]
     # print(blindspot.fillColor)
     
     fixation = setup['fixation']
