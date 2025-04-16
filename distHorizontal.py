@@ -736,4 +736,4 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
 
 
 if __name__ == "__main__":
-    doDistanceTask()
+    doDistHorizontalTask()
