@@ -78,7 +78,7 @@ def doDistBinocularTask(ID=None, hemifield=None, location=None):
             location = 'glasgow'
 
 
-    random.seed(ID+'distance'+hemifield)
+    random.seed(ID+'bindistance')
 
     trackEyes = [True, True]
 
