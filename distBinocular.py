@@ -66,8 +66,8 @@ def doDistBinocularTask(ID=None, hemifield=None, location=None):
 
     if ID == None:
         ID = expInfo['ID'].lower()
-    if hemifield == None:
-        hemifield = expInfo['hemifield']
+    # if hemifield == None:
+    #     hemifield = expInfo['hemifield']
 
     # need to know which eye-tracker to use:
     if location == None:
