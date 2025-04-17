@@ -1,0 +1,475 @@
+#!/usr/bin/env python3
+
+# GUI elements, and interaction with OS
+import wx, wx.adv, os
+
+# we need to open webbrowsers to fill in the consent form:
+import webbrowser as wb
+
+# functions for Runner
+from utilities import *
+
+# psychophysics:
+from calibration import *
+from distHorizontal import *
+from distBinocular import *
+
+
+class MyFrame(wx.Frame):
+
+    def __init__(self, *args, **kwds):
+
+        kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
+        wx.Frame.__init__(self, *args, **kwds)
+
+        self.SetSize(600, 480) ## too big?
+
+        ### --- MAKE GUI ELEMENTS --- ###
+        self.existingParticipants = findParticipantIDs()
+
+
+        if os.sys.platform == 'linux':
+            temp_location = 'Toronto'
+        else:
+            temp_location = 'Glasgow'
+		  
+        self.location_radiobox = wx.RadioBox(self, label = 'location:', pos = (80,10), choices = ['Glasgow', 'Toronto'], majorDimension = 1, style = wx.RA_SPECIFY_ROWS) 
+        self.location_radiobox.SetStringSelection(temp_location)
+
+        # participant elements:
+        self.text_participant = wx.StaticText(self, -1, "Participant ID:")
+        self.refresh_icon = wx.Bitmap('rotate.png') 
+        self.refresh_button = wx.Button(self, wx.ID_ANY, "refresh")
+        self.refresh_button.SetBitmap(self.refresh_icon) 
+        self.text_existing = wx.StaticText(self, -1, "Existing:")
+        self.pick_existing = wx.ComboBox(self, id=wx.ID_ANY, choices=self.existingParticipants, style=wx.CB_READONLY)
+        self.random_generate = wx.Button(self, wx.ID_ANY, "generate random")
+        self.participantID = wx.TextCtrl(self, wx.ID_ANY, "")
+
+        self.hyperlink_demographics = wx.adv.HyperlinkCtrl(self, wx.ID_ANY, label="demographics", url="")
+
+
+        # task elements:
+        self.horizontal_count = wx.StaticText(self, -1, "#")
+        self.horizontal_text = wx.StaticText(self, -1, "Horizontal:")
+        self.horizontal_color = wx.Button(self, -1, "color")
+        self.horizontal_mapping = wx.Button(self, -1, "mapping")
+        self.horizontal_left = wx.Button(self, -1, "left")
+        self.horizontal_right = wx.Button(self, -1, "right")
+
+        self.binocular_count = wx.StaticText(self, -1, "#")
+        self.binocular_text = wx.StaticText(self, -1, "Binocular:")
+        self.binocular_color = wx.Button(self, -1, "color")
+        self.binocular_mapping = wx.Button(self, -1, "mapping")
+        self.binocular_task = wx.Button(self, -1, "run")
+        # self.curve_right = wx.Button(self, -1, "right")
+
+        # self.dist_count = wx.StaticText(self, -1, "#")
+        # self.dist_text = wx.StaticText(self, -1, "DISTANCE:")
+        # self.dist_color = wx.Button(self, -1, "color")
+        # self.dist_mapping = wx.Button(self, -1, "mapping")
+        # self.dist_left = wx.Button(self, -1, "left")
+        # self.dist_right = wx.Button(self, -1, "right")
+
+
+        # control elements:
+        # self.ori_text = wx.StaticText(self, -1, "Orientation:")
+        # self.ori_color = wx.Button(self, -1, "color")
+        # self.ori_mapping = wx.Button(self, -1, "mapping")
+        # self.ori_task = wx.Button(self, -1, "adjust")
+        # self.hor_task = wx.Button(self, -1, "stairs")
+
+
+        # # synchronization elements:
+        # self.folder_check = wx.CheckBox(self, -1, "folders")
+        # self.folder_button = wx.Button(self, -1, "make")
+
+        # self.clone_check = wx.CheckBox(self, -1, "GitHub")
+        # self.clone_button = wx.Button(self, -1, "clone")
+
+        # self.pull_check = wx.CheckBox(self, -1, "GitHub")
+        # self.pull_button = wx.Button(self, -1, "pull")
+
+        # self.upload_check = wx.CheckBox(self, -1, "to OSF")
+        # self.upload_button = wx.Button(self, -1, "upload")
+
+        self.__set_properties()
+        self.__do_layout()
+
+        ### --- BIND BUTTONS TO FUNCTIONS --- ###
+        
+        # location functionality:
+        self.location_radiobox.Bind(wx.EVT_RADIOBOX,self.selectLocation)
+
+        # participant ID functionality:
+        self.Bind(wx.EVT_BUTTON, self.refresh, self.refresh_button)
+        self.Bind(wx.EVT_COMBOBOX, self.pickExisting, self.pick_existing)
+        self.Bind(wx.EVT_BUTTON, self.generateRandomID, self.random_generate)
+
+        self.Bind(wx.adv.EVT_HYPERLINK, self.onClickDemographics, self.hyperlink_demographics)
+
+        # task button functionality:
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.horizontal_color)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.horizontal_mapping)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.horizontal_left)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.horizontal_right)
+        
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.binocular_color)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.binocular_mapping)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.binocular_task)
+        # self.Bind(wx.EVT_BUTTON, self.runTask, self.area_right)
+
+        # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_color)
+        # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_mapping)
+        # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_left)
+        # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_right)
+
+
+        # control button functionality:        
+        # self.Bind(wx.EVT_BUTTON, self.runTask, self.ori_color)
+        # self.Bind(wx.EVT_BUTTON, self.runTask, self.ori_mapping)
+        # self.Bind(wx.EVT_BUTTON, self.runTask, self.ori_task)
+        # self.Bind(wx.EVT_BUTTON, self.runTask, self.hor_task)
+
+
+        # # more advanced stuff ?
+        # self.Bind(wx.EVT_BUTTON, self.makeDataFolders, self.folder_button)
+        # self.Bind(wx.EVT_BUTTON, self.cloneGitHub, self.clone_button)
+        # self.Bind(wx.EVT_BUTTON, self.pullGitHub, self.pull_button)
+
+        # # UPLOAD functionality needs to be figured out still...
+
+
+
+
+    def __set_properties(self):
+        self.SetTitle("Intrepid-2a Experiment Controls")
+        self.disableChecks()
+        self.selectLocation()
+        # update list of choices for existing participants
+        self.refresh()
+
+        # count participants who already did the experiment?
+
+    def __do_layout(self):
+
+        # there will be 3 main sections, that each get a grid sizer:
+        # - participant ID section
+        # - task run setcion (with N counters)
+        # - GitHub & OSF synchronization sections
+        # these will be placed into the main grid afterwards
+
+        main_grid        = wx.GridSizer(4, 1, 0, 0)
+        
+        # other grids, to put in main grid:
+        # location thing is 1 item, no grid needed...
+        participant_grid = wx.GridSizer(2, 4, 0, 0)
+
+        taskrun_grid     = wx.GridSizer(4, 6, 0, 0)
+
+        # control_grid     = wx.GridSizer(1, 6, 0, 0)
+
+        synch_grid       = wx.GridSizer(2, 4, 0, 0)  # too much?
+
+
+        # fill main gird:
+        main_grid.Add(self.location_radiobox, 0, wx.ALIGN_LEFT, 0)
+
+        # add elements to participant grid:
+        participant_grid.Add(self.text_participant, 0, wx.ALIGN_LEFT, 0)
+        participant_grid.Add(self.text_existing, 0, wx.ALIGN_LEFT, 0)
+        participant_grid.Add(self.random_generate, 0, wx.ALIGN_LEFT, 0)
+
+        participant_grid.Add(self.hyperlink_demographics, 1, wx.ALIGN_RIGHT, 0)
+
+        participant_grid.Add(self.refresh_button, 0, wx.ALIGN_LEFT, 0)
+        participant_grid.Add(self.pick_existing, 0, wx.ALIGN_LEFT, 0)
+        participant_grid.Add(self.participantID, 0, wx.ALIGN_LEFT, 0)
+        # add participant grid to main grid:
+        main_grid.Add(participant_grid)
+
+        # add elements to task-run grid:
+        taskrun_grid.Add(self.horizontal_count, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.horizontal_text, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.horizontal_color, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.horizontal_mapping, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.horizontal_left, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.horizontal_right, -1, wx.ALIGN_LEFT, 0)
+
+        taskrun_grid.Add(self.binocular_count, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.binocular_text, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.binocular_color, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.binocular_mapping, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.binocular_task, -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add(self.binocular_right, -1, wx.ALIGN_LEFT, 0)
+
+        # taskrun_grid.Add(self.dist_count, -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add(self.dist_text, -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add(self.dist_color, -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add(self.dist_mapping, -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add(self.dist_left, -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add(self.dist_right, -1, wx.ALIGN_LEFT, 0)
+
+
+        # add elements to control grid:
+        # taskrun_grid.Add((0,0), -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add(self.ori_text, -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add(self.ori_color, -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add(self.ori_mapping, -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add(self.ori_task, -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add(self.hor_task, -1, wx.ALIGN_LEFT, 0)
+        # taskrun_grid.Add((0,0), -1, wx.ALIGN_LEFT, 0)
+
+
+        # add task-run grid to main grid:
+        main_grid.Add(taskrun_grid)
+
+
+        # # add control grid to main grid:
+        # main_grid.Add(control_grid)
+
+        # # add elements to synch grid:
+        # synch_grid.Add(self.folder_button, -1, wx.ALIGN_LEFT, 0)
+        # synch_grid.Add(self.folder_check, -1, wx.ALIGN_LEFT, 0)
+
+        # synch_grid.Add(self.clone_button, -1, wx.ALIGN_LEFT, 0)
+        # synch_grid.Add(self.clone_check, -1, wx.ALIGN_LEFT, 0)
+
+        # synch_grid.Add(self.pull_button, -1, wx.ALIGN_LEFT, 0)
+        # synch_grid.Add(self.pull_check, -1, wx.ALIGN_LEFT, 0)
+
+        # synch_grid.Add(self.upload_button, -1, wx.ALIGN_LEFT, 0)
+        # synch_grid.Add(self.upload_check, -1, wx.ALIGN_LEFT, 0)
+        # # add synch grid to main grid:
+        # main_grid.Add(synch_grid)
+
+
+
+        self.SetSizer(main_grid)
+        self.Layout() # frame method from wx
+
+
+    def selectLocation(self, event=0):
+        self.location = self.location_radiobox.GetStringSelection().lower()
+
+    def refresh(self, event=0):
+        dataInfo = getGeneralDataInfo()
+        self.existingParticipants = dataInfo['IDs']
+        
+        self.pick_existing.Clear()
+        self.pick_existing.AppendItems(self.existingParticipants)
+        self.toggleParticipantTaskButtons(event)
+
+        counts = dataInfo['counts']
+        self.horizontal_count.SetLabel( '%d (%d)'%(counts['distHorizontal'], counts['all']) )
+        self.binocular_count.SetLabel( '%d (%d)'%(counts['distBinocular'], counts['all']) )
+        # self.dist_count.SetLabel( '%d (%d)'%(counts['distance'], counts['all']) )
+
+    def pickExisting(self, event):
+        self.participantID.SetValue(self.pick_existing.GetValue())
+        self.toggleParticipantTaskButtons(event)
+
+
+    def generateRandomID(self, event):
+        newID = generateRandomParticipantID(prepend=self.location.lower()[:3]+'', nbytes=3)
+        self.participantID.SetValue(newID)
+        self.toggleParticipantTaskButtons(event)
+
+    def onClickDemographics(self, e):
+        wb.open( url = self.hyperlink_demographics.GetURL(),
+                 new = 1,
+                 autoraise = True )
+        
+
+    def toggleParticipantTaskButtons(self, event):
+
+        newURL = 'https://docs.google.com/forms/d/e/1FAIpQLScwyXoXaymXpXOO7ZToVsHFpb8hwis1eMvQE5NNGt55ij9HGw/viewform?usp=pp_url&entry.1851916630=%s'%(self.participantID.GetValue())
+        self.hyperlink_demographics.SetURL(newURL)
+
+
+        info = getParticipantTaskInfo(self.participantID.GetValue())
+
+        # new check 8 things, and toggle the 16 buttons:
+        self.horizontal_color.Enable()
+        self.horizontal_mapping.Disable()
+        if info['distHorizontal']['color']:
+            self.horizontal_mapping.Enable()
+        self.horizontal_left.Disable()
+        self.horizontal_right.Disable()
+        if info['distHorizontal']['mapping']:
+            self.horizontal_left.Enable()
+            self.horizontal_right.Enable()
+
+        self.binocular_color.Enable()
+        self.binocular_mapping.Disable()
+        if info['distBinocular']['color']:
+            self.binocular_mapping.Enable()
+        self.binocular_task.Disable()
+        if info['distBinocular']['mapping']:
+            self.binocular_task.Enable()
+        
+        # self.curve_color.Enable()
+        # self.curve_mapping.Disable()
+        # if info['curvature']['color']:
+        #     self.curve_mapping.Enable()
+        # self.curve_left.Disable()
+        # self.curve_right.Disable()
+        # if info['curvature']['mapping']:
+        #     self.curve_left.Enable()
+        #     self.curve_right.Enable()
+
+        # self.ori_color.Enable()
+        # self.ori_mapping.Disable()
+        # if info['orientation']['color']:
+        #     self.ori_mapping.Enable()
+        # self.ori_task.Disable()
+        # self.hor_task.Disable()
+        # if info['orientation']['mapping']:
+        #     self.ori_task.Enable()
+        #     self.hor_task.Enable()
+
+
+    def runTask(self, event):
+
+        if self.participantID.GetValue() == '':
+            # no participant ID!
+            return
+
+        task = None
+        subtask = None
+
+        buttonId = event.Id
+        if buttonId in [self.horizontal_color.Id, self.horizontal_mapping.Id, self.horizontal_left.Id, self.horizontal_right.Id]:
+            task = 'distHorizontal'
+        if buttonId in [self.binocular_color.Id, self.binocular_mapping.Id, self.binocular_task.Id]:
+            task = 'distBinocular'
+        # if buttonId in [self.dist_color.Id, self.dist_mapping.Id, self.dist_left.Id, self.dist_right.Id]:
+        #     task = 'distance'
+        # if buttonId in [self.area_color.Id, self.area_mapping.Id, self.area_left.Id, self.area_right.Id]:
+        #     task = 'area'
+        # if buttonId in [self.curve_color.Id, self.curve_mapping.Id, self.curve_left.Id, self.curve_right.Id]:
+        #     task = 'curvature'
+        # if buttonId in [self.ori_color.Id, self.ori_mapping.Id, self.ori_task.Id, self.hor_task.Id]:
+        #     task = 'orientation'
+
+        if buttonId in [self.horizontal_color.Id,   self.binocular_color.Id]:
+            subtask = 'color'
+        if buttonId in [self.horizontal_mapping.Id, self.binocular_mapping.Id]:
+            subtask = 'mapping'
+        if buttonId in [self.horizontal_left.Id]:
+            subtask = 'left'
+        if buttonId in [self.horizontal_right.Id]:
+            subtask = 'right'
+        if buttonId in [self.binocular_task.Id]:
+            subtask = 'both'
+
+        # if buttonId in [self.dist_color.Id,   self.area_color.Id,   self.curve_color.Id,   self.ori_color.Id]:
+        #     subtask = 'color'
+        # if buttonId in [self.dist_mapping.Id, self.area_mapping.Id, self.curve_mapping.Id, self.ori_mapping.Id]:
+        #     subtask = 'mapping'
+        # if buttonId in [self.dist_left.Id,    self.area_left.Id,    self.curve_left.Id]:
+        #     subtask = 'left'
+        # if buttonId in [self.dist_right.Id,   self.area_right.Id,   self.curve_right.Id]:
+        #     subtask = 'right'
+
+
+        # if buttonId in [self.ori_task.Id]:
+        #     subtask = 'orientation'
+        # if buttonId in [self.hor_task.Id]:
+        #     subtask = 'horizontal'
+
+        if subtask == None:
+            print('no subtask')
+            return
+        if task == None:
+            print('no task')
+            return
+        
+        print([task, subtask])
+
+        if subtask == 'color':
+            print('do color calibration')
+            doColorCalibration(ID=self.participantID.GetValue(), task=task, location=self.location)
+            return
+
+        if subtask == 'mapping':
+            # print('do blind spot mpapping')
+            doBlindSpotMapping(ID=self.participantID.GetValue(), task=task, location=self.location)
+            return
+
+        if task == 'distHorizontal':
+            # print('do distance task')
+            doDistHorizontalTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
+            return
+
+        if task == 'distBinocular':
+            # print('do distance task')
+            doDistBinocularTask(ID=self.participantID.GetValue(), location=self.location)
+            return
+
+
+        # if task == 'area':
+        #     # print('do distance task')
+        #     doAreaTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
+        #     return
+
+        # if task == 'distance':
+        #     # print('do distance task')
+        #     doDistanceTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
+        #     return
+
+        # if task == 'curvature':
+        #     # print('do curvature task')
+        #     doCurvatureTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
+        #     return
+
+        # if task == 'orientation':
+        #     if subtask == 'orientation':
+        #         doOrientationTask(ID=self.participantID.GetValue(), location=self.location)
+        #         return
+        #     if subtask == 'horizontal':
+        #         doHorizontalTask(ID=self.participantID.GetValue(), location=self.location)
+        #         return
+
+
+    def disableChecks(self):
+        pass
+        # self.folder_check.SetValue(False)
+        # self.clone_check.SetValue(False)
+        # self.pull_check.SetValue(False)
+        # self.upload_check.SetValue(False)
+
+    def makeDataFolders(self, event):
+        pass
+        # if self.folder_check.GetValue():
+        #     utilities.setupDataFolders()
+        # self.disableChecks()
+
+    def cloneGitHub(self, event):
+        pass
+        # if self.clone_check.GetValue():
+        #     utilities.pullGitRepos(repos='all', main=True, clone=True)
+        # self.disableChecks()
+
+    def pullGitHub(self, event):
+        pass
+        # if self.pull_check.GetValue():
+        #     utilities.pullGitRepos(repos='all', main=True, clone=False)
+        # self.disableChecks()
+
+
+
+
+
+
+class MyApp(wx.App):
+    def OnInit(self):
+        self.frame = MyFrame(None, wx.ID_ANY, "")
+        self.SetTopWindow(self.frame)
+        self.frame.Show()
+        return True
+
+if __name__ == "__main__":
+    app = MyApp(0)
+    app.MainLoop()
+
