@@ -223,20 +223,24 @@ def getParticipantTaskInfo(ID):
 
 def getGeneralDataInfo():
     
+    # tasks = ['distance',
+    #          'area',
+    #          'curvature',
+    #          'distHorizontal',
+    #          'distBinocular']
     tasks = ['distance',
-             'area',
-             'curvature',
+            #  'area',
+            #  'curvature',
              'distHorizontal',
              'distBinocular']
-
     subtasks = ['',
                 'color',
                 'mapping']
 
     allParticipantIDs = []
     taskParticipants = {'distance':[],
-                        'area':[],
-                        'curvature':[],
+                        # 'area':[],
+                        # 'curvature':[],
                         'distHorizontal':[],
                         'distBinocular':[]}
 
@@ -289,10 +293,12 @@ def getGeneralDataInfo():
                 if all([right_done, left_done]):
                     taskParticipants[task] += [ID]
 
-    taskParticipants['all'] = list(set(taskParticipants['area']).intersection(set(taskParticipants['curvature'])).intersection(set(taskParticipants['distance'])).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distBinocular'])))
+    # taskParticipants['all'] = list(set(taskParticipants['area']).intersection(set(taskParticipants['curvature'])).intersection(set(taskParticipants['distance'])).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distBinocular'])))
+    taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distBinocular'])))
 
-    bytask = { 'area':           taskParticipants['area'], 
-               'curvature':      taskParticipants['curvature'], 
+    bytask = { 
+            #    'area':           taskParticipants['area'], 
+            #    'curvature':      taskParticipants['curvature'], 
                'distance':       taskParticipants['distance'],
                'distHorizontal': taskParticipants['distHorizontal'],
                'distBinocular':  taskParticipants['distBinocular'] }
