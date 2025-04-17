@@ -361,7 +361,7 @@ class MyFrame(wx.Frame):
         if buttonId in [self.horizontal_right.Id]:
             subtask = 'right'
         if buttonId in [self.binocular_task.Id]:
-            subtask = 'both'
+            subtask = 'run'
 
         # if buttonId in [self.dist_color.Id,   self.area_color.Id,   self.curve_color.Id,   self.ori_color.Id]:
         #     subtask = 'color'
