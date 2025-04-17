@@ -98,7 +98,7 @@ def doDistBinocularTask(ID=None, hemifield=None, location=None):
     # create output file:
     x = 1
     # filename = '_dist_' + ('LH' if hemifield == 'left' else 'RH') + '_' + ID + '_'
-    filename = ID + '_distB_'
+    filename = ID + '_distb_run_'
     while (filename + str(x) + '.txt') in os.listdir(data_path):
         x += 1
     respFileName = data_path + filename + str(x) + '.txt'
@@ -161,6 +161,8 @@ def doDistBinocularTask(ID=None, hemifield=None, location=None):
         col_contra, col_ipsi = colors['left'], colors['right']
 
 
+    # do we need to take into account the luminance of the individual channels?
+
     # gammaGrid = np.array([ [  0., 135.44739,  2.4203537, np.nan, np.nan, np.nan  ],
     #                        [  0.,  27.722954, 2.4203537, np.nan, np.nan, np.nan  ],
     #                        [  0.,  97.999275, 2.4203537, np.nan, np.nan, np.nan  ],
@@ -172,6 +174,8 @@ def doDistBinocularTask(ID=None, hemifield=None, location=None):
     # Lw = Gmax / (Rmax+Gmax)
     # col_binoc = [(Lw*colors['left'][i]) + (Rw*colors['right'][i]) for i in range(len(colors['right']))]
 
+    # no....
+    # the simple average below actually has the average luminance of the red and green used:
     Lw = 0.5
     Rw = 0.5
     col_binoc = [(Lw*colors['left'][i]) + (Rw*colors['right'][i]) for i in range(len(colors['right']))]
