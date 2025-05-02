@@ -225,8 +225,8 @@ def doScaleDistanceTask(ID=None, hemifield=None, location=None):
         "righ-bot": [(spot_right[0] - ang_up_right, spot_right[1] - tar_right/2), (spot_right[0] - ang_up_right, spot_right[1] + tar_right/2)],
     }
 
-    left_scale = (position["left-mid"][0][1] - 1) / (position["left-mid"][1][1])
-    righ_scale = (position["righ-mid"][0][1] - 1) / (position["righ-mid"][1][1])
+    left_scale = (positions["left-mid"][0][1] - 1) / (positions["left-mid"][1][1])
+    righ_scale = (positions["righ-mid"][0][1] - 1) / (positions["righ-mid"][1][1])
 
     for pos_idx in ["left-top","left-mid", "left-bot"]:
         positions[pos_idx][0][1] *= left_scale
