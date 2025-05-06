@@ -326,6 +326,7 @@ def doScaleDistanceTask(ID=None, hemifield=None, location=None):
     pos_arrays = [pos_array_bsa[:]] * 4 + [pos_array_out[:]] * 4
 
     intervals = [3.5,3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
+    intervals = [x / 2 for x in intervals]
     position = [[]] * 8
     trial_stair = [0] * 8
     revs = [0] * 8
