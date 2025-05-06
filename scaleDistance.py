@@ -36,7 +36,7 @@ from EyeTracking import localizeSetup, EyeTracker
 #### Initialize experiment
 ######
 
-def doScaleDistanceTask(ID=None, hemifield=None, location=None):
+def doDistScaledTask(ID=None, hemifield=None, location=None):
 
     ## parameters
     nRevs   = 10   #
