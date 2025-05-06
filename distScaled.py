@@ -215,25 +215,28 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
 
     ## prepare trials
 
+    left_scale = (spot_left[1]  - tar_left/2)  / (spot_left[1]  + tar_left/2)
+    righ_scale = (spot_right[1] - tar_right/2) / (spot_right[1] + tar_right/2)
+
     # these positions are polar coordinates: (angle, distance)
     positions = {
-        "left-top": [(spot_left[0]  - ang_up_left,  spot_left[1]  - tar_left/2),  (spot_left[0]  - ang_up_left,  spot_left[1]  + tar_left/2)],
-        "left-mid": [(spot_left[0]  +          00,  spot_left[1]  - tar_left/2),  (spot_left[0]  +          00,  spot_left[1]  + tar_left/2)],
-        "left-bot": [(spot_left[0]  + ang_up_left,  spot_left[1]  - tar_left/2),  (spot_left[0]  + ang_up_left,  spot_left[1]  + tar_left/2)],
-        "righ-top": [(spot_right[0] + ang_up_right, spot_right[1] - tar_right/2), (spot_right[0] + ang_up_right, spot_right[1] + tar_right/2)],
-        "righ-mid": [(spot_right[0] +           00, spot_right[1] - tar_right/2), (spot_right[0] +           00, spot_right[1] + tar_right/2)],
-        "righ-bot": [(spot_right[0] - ang_up_right, spot_right[1] - tar_right/2), (spot_right[0] - ang_up_right, spot_right[1] + tar_right/2)],
+        "left-top": [(spot_left[0]  - ang_up_left,  (spot_left[1]  - tar_left/2) * left_scale),  (spot_left[0]  - ang_up_left,  (spot_left[1]  + tar_left/2) * left_scale)],
+        "left-mid": [(spot_left[0]  +          00,  (spot_left[1]  - tar_left/2) * left_scale),  (spot_left[0]  +          00,  (spot_left[1]  + tar_left/2) * left_scale)],
+        "left-bot": [(spot_left[0]  + ang_up_left,  (spot_left[1]  - tar_left/2) * left_scale),  (spot_left[0]  + ang_up_left,  (spot_left[1]  + tar_left/2) * left_scale)],
+        "righ-top": [(spot_right[0] + ang_up_right, (spot_right[1] - tar_right/2) * righ_scale), (spot_right[0] + ang_up_right, (spot_right[1] + tar_right/2) * righ_scale)],
+        "righ-mid": [(spot_right[0] +           00, (spot_right[1] - tar_right/2) * righ_scale), (spot_right[0] +           00, (spot_right[1] + tar_right/2) * righ_scale)],
+        "righ-bot": [(spot_right[0] - ang_up_right, (spot_right[1] - tar_right/2) * righ_scale), (spot_right[0] - ang_up_right, (spot_right[1] + tar_right/2) * righ_scale)],
     }
 
-    left_scale = (positions["left-mid"][0][1] - 1) / (positions["left-mid"][1][1])
-    righ_scale = (positions["righ-mid"][0][1] - 1) / (positions["righ-mid"][1][1])
+    # left_scale = (positions["left-mid"][0][1] - 1) / (positions["left-mid"][1][1])
+    # righ_scale = (positions["righ-mid"][0][1] - 1) / (positions["righ-mid"][1][1])
 
-    for pos_idx in ["left-top","left-mid", "left-bot"]:
-        positions[pos_idx][0][1] = positions[pos_idx][0][1] * left_scale
-        positions[pos_idx][1][1] = positions[pos_idx][1][1] * left_scale
-    for pos_idx in ["righ-top","righ-mid", "righ-bot"]:
-        positions[pos_idx][0][1] = positions[pos_idx][0][1]* righ_scale
-        positions[pos_idx][1][1] = positions[pos_idx][1][1] * righ_scale
+    # for pos_idx in ["left-top","left-mid", "left-bot"]:
+    #     positions[pos_idx][0][1] = positions[pos_idx][0][1] * left_scale
+    #     positions[pos_idx][1][1] = positions[pos_idx][1][1] * left_scale
+    # for pos_idx in ["righ-top","righ-mid", "righ-bot"]:
+    #     positions[pos_idx][0][1] = positions[pos_idx][0][1]* righ_scale
+    #     positions[pos_idx][1][1] = positions[pos_idx][1][1] * righ_scale
 
     if hemifield == 'left':
         # First column is target, second column is foil
