@@ -329,10 +329,10 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
     pos_arrays = [pos_array_bsa[:]] * 4 + [pos_array_out[:]] * 4
 
     # intervals = [3.5,3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
-    # intervals = [x / 2 for x in intervals]
+    # intervals = [x * 0.5 for x in intervals]
 
-    # even smaller, but not quite 1/4:
-    intervals = [ (x-7) * 0.16 for x in range(15)]
+    # even smaller, but not quite 1/4 (steps of 0.125):
+    intervals = [ (x-7) * 0.15 for x in range(15) ]
 
     position = [[]] * 8
     trial_stair = [0] * 8
