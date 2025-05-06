@@ -35,7 +35,7 @@ def doColorCalibration(ID=None, task=None, location=None):
         expInfo['ID'] = ''
         askQuestions = True
     if task == None:
-        expInfo['task'] = ['distHorizontal', 'distBinocular']
+        expInfo['task'] = ['distHorizontal', 'distBinocular', 'distScaled']
         askQuestions = True
     # if location == None:
     #     expInfo['location'] = ['glasgow', 'toronto']
@@ -260,7 +260,7 @@ def doBlindSpotMapping(ID=None,task=None,location=None):
         expInfo['ID'] = ''
         askQuestions = True
     if task == None:
-        expInfo['task'] = ['distHorizontal', 'distBinocular']
+        expInfo['task'] = ['distHorizontal', 'distBinocular', 'distScaled']
         askQuestions = True
     # if hemifield == None:
     #     expInfo['hemifield'] = ['left','right']
