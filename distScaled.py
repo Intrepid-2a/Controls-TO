@@ -255,10 +255,10 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
         tar = tar_right * scale
 
 
-    point_1.radius *= scale
-    point_2.radius *= scale
-    point_3.radius *= scale
-    point_4.radius *= scale
+    point_1.radius = 0.5 * scale
+    point_2.radius = 0.5 * scale
+    point_3.radius = 0.5 * scale
+    point_4.radius = 0.5 * scale
 
 
     pos_array_bsa = pos_array[0:2]
