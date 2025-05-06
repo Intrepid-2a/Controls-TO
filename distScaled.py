@@ -229,11 +229,11 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
     righ_scale = (positions["righ-mid"][0][1] - 1) / (positions["righ-mid"][1][1])
 
     for pos_idx in ["left-top","left-mid", "left-bot"]:
-        positions[pos_idx][0][1] *= left_scale
-        positions[pos_idx][1][1] *= left_scale
+        positions[pos_idx][0][1] = positions[pos_idx][0][1] * left_scale
+        positions[pos_idx][1][1] = positions[pos_idx][1][1] * left_scale
     for pos_idx in ["righ-top","righ-mid", "righ-bot"]:
-        positions[pos_idx][0][1] *= righ_scale
-        positions[pos_idx][1][1] *= righ_scale
+        positions[pos_idx][0][1] = positions[pos_idx][0][1]* righ_scale
+        positions[pos_idx][1][1] = positions[pos_idx][1][1] * righ_scale
 
     if hemifield == 'left':
         # First column is target, second column is foil
