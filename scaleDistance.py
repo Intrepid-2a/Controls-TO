@@ -82,7 +82,7 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
     # ## path
     # main_path = 'C:/Users/clementa/Nextcloud/project_blindspot/blindspot_eye_tracker/'
     # data_path = main_path + 'data/'
-    main_path = '../data/distance/'
+    main_path = '../data/distScaled/'
     data_path = main_path
     eyetracking_path = main_path + 'eyetracking/' + ID + '/'
     
@@ -95,7 +95,7 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
     # create output file:
     x = 1
     # filename = '_dist_' + ('LH' if hemifield == 'left' else 'RH') + '_' + ID + '_'
-    filename = ID + '_dist_' + ('LH' if hemifield == 'left' else 'RH') + '_'
+    filename = ID + '_dstS_' + ('LH' if hemifield == 'left' else 'RH') + '_'
     while (filename + str(x) + '.txt') in os.listdir(data_path):
         x += 1
     respFile = open(data_path + filename + str(x) + '.txt','w')
@@ -131,12 +131,12 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
 
 
     x = 1
-    et_filename = 'dist' + ('LH' if hemifield == 'left' else 'RH')
+    et_filename = 'dstS' + ('LH' if hemifield == 'left' else 'RH')
     while len(glob(eyetracking_path + et_filename + str(x) + '.*')):
         x += 1
 
     # get everything shared from central:
-    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distance', ID=ID) # data path is for the mapping data, not the eye-tracker data!
+    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distScaled', ID=ID) # data path is for the mapping data, not the eye-tracker data!
 
     print(setup['paths']) # not using yet, just testing
 
@@ -731,4 +731,4 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
 
 
 if __name__ == "__main__":
-    doScaleDistanceTask()
+    doDistScaledTask()
