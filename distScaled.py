@@ -95,7 +95,7 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
     # create output file:
     x = 1
     # filename = '_dist_' + ('LH' if hemifield == 'left' else 'RH') + '_' + ID + '_'
-    filename = ID + '_dstS_' + ('LH' if hemifield == 'left' else 'RH') + '_'
+    filename = ID + '_dists_' + ('LH' if hemifield == 'left' else 'RH') + '_'
     while (filename + str(x) + '.txt') in os.listdir(data_path):
         x += 1
     respFile = open(data_path + filename + str(x) + '.txt','w')
