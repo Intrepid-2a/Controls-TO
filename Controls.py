@@ -14,6 +14,8 @@ from calibration import *
 from distHorizontal import *
 from distBinocular import *
 
+from distScaled import *
+
 
 class MyFrame(wx.Frame):
 
@@ -56,6 +58,13 @@ class MyFrame(wx.Frame):
         self.horizontal_mapping = wx.Button(self, -1, "mapping")
         self.horizontal_left = wx.Button(self, -1, "left")
         self.horizontal_right = wx.Button(self, -1, "right")
+
+        self.scaled_count = wx.StaticText(self, -1, "#")
+        self.scaled_text = wx.StaticText(self, -1, "Scaled:")
+        self.scaled_color = wx.Button(self, -1, "color")
+        self.scaled_mapping = wx.Button(self, -1, "mapping")
+        self.scaled_left = wx.Button(self, -1, "left")
+        self.scaled_right = wx.Button(self, -1, "right")
 
         self.binocular_count = wx.StaticText(self, -1, "#")
         self.binocular_text = wx.StaticText(self, -1, "Binocular:")
@@ -118,6 +127,11 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.runTask, self.binocular_mapping)
         self.Bind(wx.EVT_BUTTON, self.runTask, self.binocular_task)
         # self.Bind(wx.EVT_BUTTON, self.runTask, self.area_right)
+
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.scaled_color)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.scaled_mapping)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.scaled_left)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.scaled_right)
 
         # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_color)
         # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_mapping)
@@ -196,6 +210,13 @@ class MyFrame(wx.Frame):
         taskrun_grid.Add(self.horizontal_left, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.horizontal_right, -1, wx.ALIGN_LEFT, 0)
 
+        taskrun_grid.Add(self.scaled_count, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.scaled_text, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.scaled_color, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.scaled_mapping, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.scaled_left, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.scaled_right, -1, wx.ALIGN_LEFT, 0)
+
         taskrun_grid.Add(self.binocular_count, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.binocular_text, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.binocular_color, -1, wx.ALIGN_LEFT, 0)
@@ -262,6 +283,7 @@ class MyFrame(wx.Frame):
 
         counts = dataInfo['counts']
         self.horizontal_count.SetLabel( '%d (%d)'%(counts['distHorizontal'], counts['all']) )
+        self.scaled_count.SetLabel( '%d (%d)'%(counts['distScaled'], counts['all']) )
         self.binocular_count.SetLabel( '%d (%d)'%(counts['distBinocular'], counts['all']) )
         # self.dist_count.SetLabel( '%d (%d)'%(counts['distance'], counts['all']) )
 
@@ -299,6 +321,16 @@ class MyFrame(wx.Frame):
         if info['distHorizontal']['mapping']:
             self.horizontal_left.Enable()
             self.horizontal_right.Enable()
+        
+        self.scaled_color.Enable()
+        self.scaled_mapping.Disable()
+        if info['distScaled']['color']:
+            self.scaled_mapping.Enable()
+        self.scaled_left.Disable()
+        self.scaled_right.Disable()
+        if info['distScaled']['mapping']:
+            self.scaled_left.Enable()
+            self.scaled_right.Enable()
 
         self.binocular_color.Enable()
         self.binocular_mapping.Disable()
@@ -341,6 +373,8 @@ class MyFrame(wx.Frame):
         buttonId = event.Id
         if buttonId in [self.horizontal_color.Id, self.horizontal_mapping.Id, self.horizontal_left.Id, self.horizontal_right.Id]:
             task = 'distHorizontal'
+                if buttonId in [self.scaled_color.Id, self.scaled_mapping.Id, self.scaled_left.Id, self.scaled_right.Id]:
+            task = 'distScaled'
         if buttonId in [self.binocular_color.Id, self.binocular_mapping.Id, self.binocular_task.Id]:
             task = 'distBinocular'
         # if buttonId in [self.dist_color.Id, self.dist_mapping.Id, self.dist_left.Id, self.dist_right.Id]:
@@ -352,13 +386,13 @@ class MyFrame(wx.Frame):
         # if buttonId in [self.ori_color.Id, self.ori_mapping.Id, self.ori_task.Id, self.hor_task.Id]:
         #     task = 'orientation'
 
-        if buttonId in [self.horizontal_color.Id,   self.binocular_color.Id]:
+        if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.binocular_color.Id]:
             subtask = 'color'
-        if buttonId in [self.horizontal_mapping.Id, self.binocular_mapping.Id]:
+        if buttonId in [self.horizontal_mapping.Id, self.scaled_mapping.Id, self.binocular_mapping.Id]:
             subtask = 'mapping'
-        if buttonId in [self.horizontal_left.Id]:
+        if buttonId in [self.horizontal_left.Id, self.scaled_left.Id]:
             subtask = 'left'
-        if buttonId in [self.horizontal_right.Id]:
+        if buttonId in [self.horizontal_right.Id, self.scaled_right.Id]:
             subtask = 'right'
         if buttonId in [self.binocular_task.Id]:
             subtask = 'run'
@@ -400,6 +434,11 @@ class MyFrame(wx.Frame):
         if task == 'distHorizontal':
             # print('do distance task')
             doDistHorizontalTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
+            return
+
+        if task == 'distScaled':
+            # print('do distance task')
+            doDistScaledTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
             return
 
         if task == 'distBinocular':
