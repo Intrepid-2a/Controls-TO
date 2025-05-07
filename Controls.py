@@ -373,7 +373,7 @@ class MyFrame(wx.Frame):
         buttonId = event.Id
         if buttonId in [self.horizontal_color.Id, self.horizontal_mapping.Id, self.horizontal_left.Id, self.horizontal_right.Id]:
             task = 'distHorizontal'
-                if buttonId in [self.scaled_color.Id, self.scaled_mapping.Id, self.scaled_left.Id, self.scaled_right.Id]:
+        if buttonId in [self.scaled_color.Id, self.scaled_mapping.Id, self.scaled_left.Id, self.scaled_right.Id]:
             task = 'distScaled'
         if buttonId in [self.binocular_color.Id, self.binocular_mapping.Id, self.binocular_task.Id]:
             task = 'distBinocular'
