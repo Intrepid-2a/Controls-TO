@@ -332,7 +332,9 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
     # intervals = [x * 0.5 for x in intervals]
 
     # even smaller, but not quite 1/4 (steps of 0.125):
-    intervals = [ (x-7) * 0.15 for x in range(15) ]
+    # intervals = [ (x-7) * 0.15 for x in range(15) ]
+    # same:
+    intervals = [ -1.05, -0.9, -0.75, -0.6, -0.45, -0.3, -0.15, 0.0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05 ]
 
     position = [[]] * 8
     trial_stair = [0] * 8
@@ -621,6 +623,7 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
             reversal = 'auto_abort'
         
         if increment:
+            print('incrementing staircase')
             '''
             which_first == 'Targ'          => was target first? (True/False)
             dif > 0                        => was target smaller? (True/False)
