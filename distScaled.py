@@ -137,6 +137,8 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
 
     # get everything shared from central:
     setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distScaled', ID=ID) # data path is for the mapping data, not the eye-tracker data!
+    # setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distScaled', ID=ID, noEyeTracker=True) # data path is for the mapping data, not the eye-tracker data!
+    
 
     print(setup['paths']) # not using yet, just testing
 
@@ -168,6 +170,7 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
     # print(blindspot.fillColor)
     
     fixation = setup['fixation']
+
 
     tracker = setup['tracker']
     
@@ -274,24 +277,15 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
 
     # first calibration
     visual.TextStim(win,'Calibration...', color = col_both, units = 'deg', pos = (0,-2)).draw()
-    fixation.draw()
-    win.flip()
-    k = event.waitKeys()
-    if k[0] in ['q']:
-        respFile.close()
-
-        # send quit comment
-        # stop tracking
-        # close file
-        # shutdown eye-tracker
-
+    fixation.draw()Primarily I'll run some lab-members to try out the scaled version, and get some pilot data. After that
         win.close()
         core.quit()
     
     event.clearEvents(eventType='keyboard') # just to be sure?
         
     #!!# calibrate
-    #tracker.initialize() # this should be done in the central thing... dependent on location: in Toronto we need to override the calibrationTargets
+    #######tracker.initialize() # this should be done in the central thing... dependent on location: in Toronto we need to override the calibrationTargets
+
 
     tracker.openfile()
     tracker.startcollecting()
@@ -329,12 +323,12 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
     pos_arrays = [pos_array_bsa[:]] * 4 + [pos_array_out[:]] * 4
 
     # intervals = [3.5,3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
-    # intervals = [x * 0.5 for x in intervals]
+    # intervals = [ round(x * 0.3, 2) for x in intervals]
 
     # even smaller, but not quite 1/4 (steps of 0.125):
-    # intervals = [ (x-7) * 0.15 for x in range(15) ]
+    # intervals = [ (x-7) * -0.15 for x in range(15) ]
     # same:
-    intervals = [ -1.05, -0.9, -0.75, -0.6, -0.45, -0.3, -0.15, 0.0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05 ]
+    intervals = [ 1.05, 0.9, 0.75, 0.6, 0.45, 0.3, 0.15, 0.0, -0.15, -0.3, -0.45, -0.6, -0.75, -0.9, -1.05 ]
 
     position = [[]] * 8
     trial_stair = [0] * 8
@@ -558,9 +552,7 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
                 event.clearEvents(eventType='keyboard') # just to be sure?
                     
                 #!!# calibrate
-                # tracker.stopcollecting() # do we even have to stop/start collecting?
                 tracker.calibrate()
-                # tracker.startcollecting()
                 recalibrate = False
 
                 
@@ -602,9 +594,7 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
                         break
 
                     #!!# calibrate
-                    # tracker.stopcollecting() # do we even have to stop/start collecting?
                     tracker.calibrate()
-                    # tracker.startcollecting()
 
                     fixation.draw()
                     win.flip()
