@@ -277,7 +277,17 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
 
     # first calibration
     visual.TextStim(win,'Calibration...', color = col_both, units = 'deg', pos = (0,-2)).draw()
-    fixation.draw()Primarily I'll run some lab-members to try out the scaled version, and get some pilot data. After that
+    fixation.draw()
+    win.flip()
+    k = event.waitKeys()
+    if k[0] in ['q']:
+        respFile.close()
+
+        # send quit comment
+        # stop tracking
+        # close file
+        # shutdown eye-tracker
+
         win.close()
         core.quit()
     
