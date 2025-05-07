@@ -613,8 +613,8 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
             reversal = 'auto_abort'
         
         if increment:
-            print('incrementing staircase')
-            print('staircase direction: %d'%direction[which_stair])
+            # print('incrementing staircase')
+            # print('staircase direction: %d'%direction[which_stair])
             '''
             which_first == 'Targ'          => was target first? (True/False)
             dif > 0                        => was target smaller? (True/False)
@@ -631,15 +631,15 @@ def doDistScaledTask(ID=None, hemifield=None, location=None):
             reversal = False
             resps[which_stair] = resps[which_stair] + [targ_chosen]
             if  resps[which_stair][-2] != resps[which_stair][-1]:
-                print('reversal...')
+                # print('reversal...')
                 reversal = True
                 direction[which_stair] *= -1
                 revs[which_stair] += len(resps[which_stair]) > 2
                 
             ## increment/update
-            print('current interval: %d'%cur_int[which_stair])
+            # print('current interval: %d'%cur_int[which_stair])
             cur_int[which_stair] = max(min(cur_int[which_stair] + direction[which_stair], len(intervals) - 1), 0)
-            print('new interval: %d'%cur_int[which_stair])
+            # print('new interval: %d'%cur_int[which_stair])
 
             # trial count:
             trial_stair[which_stair] = trial_stair[which_stair] + 1
