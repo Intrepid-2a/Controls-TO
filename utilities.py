@@ -200,7 +200,7 @@ def getParticipantTaskInfo(ID):
 
     info = {}
 
-    for task in ['area', 'curvature', 'distance', 'orientation', 'distHorizontal', 'distBinocular']:
+    for task in ['area', 'curvature', 'distance', 'orientation', 'distHorizontal', 'distScaled', 'distBinocular']:
         info[task] = {}
         subtasks = ['color','mapping','RH','LH']
         if task == 'distBinocular':
