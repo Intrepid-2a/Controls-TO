@@ -146,6 +146,8 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
     # unpack all this
     win = setup['win']
 
+    win.viewPos = [0,-8]
+
 
     pyg_keyboard = key.KeyStateHandler()
     win.winHandle.push_handlers(pyg_keyboard)
