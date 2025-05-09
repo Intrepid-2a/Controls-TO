@@ -1834,8 +1834,6 @@ class fusionStim:
         self.square  = square
         self.units   = units
 
-        print([self.rows, self.columns])
-
         self.resetProperties()
 
     def resetProperties(self):
