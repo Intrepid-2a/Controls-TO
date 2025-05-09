@@ -172,13 +172,17 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
     loFusion.rows = 2
     loFusion.columns = 9
 
-    loFusion.pos = [0,-5]
+    loFusion.pos = [0,-10]
 
     hiFusion.rows = 9
     hiFusion.columns = 2
 
     blindspot = setup['blindspotmarkers'][hemifield]
     # print(blindspot.fillColor)
+
+    # stays visible for some reason... make even smaller?
+    spot_size = blindspot.size
+    blindspot.size = [max(min(1,x),x-.5) for x in spot_size]
     
     fixation = setup['fixation']
 
@@ -243,14 +247,14 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
                      ["left-top", "left-bot"],
                      ["left-bot", "left-top"]]
         tar = tar_left
-        hiFusion.pos = [15,0]
+        hiFusion.pos = [15,5]
     else:
         pos_array = [["righ-mid", "righ-top"],
                      ["righ-mid", "righ-bot"],
                      ["righ-top", "righ-bot"],
                      ["righ-bot", "righ-top"]]
         tar = tar_right
-        hiFusion.pos = [-15,0]
+        hiFusion.pos = [-15,5]
 
     pos_array_bsa = pos_array[0:2]
     pos_array_out = pos_array[2:4]
