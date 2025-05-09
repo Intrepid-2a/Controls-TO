@@ -35,7 +35,7 @@ def doColorCalibration(ID=None, task=None, location=None):
         expInfo['ID'] = ''
         askQuestions = True
     if task == None:
-        expInfo['task'] = ['distHorizontal', 'distBinocular', 'distScaled']
+        expInfo['task'] = ['distHorizontal', 'distBinocular', 'distScaled', 'distCentred', 'distRotated']
         askQuestions = True
     # if location == None:
     #     expInfo['location'] = ['glasgow', 'toronto']
@@ -100,6 +100,8 @@ def doColorCalibration(ID=None, task=None, location=None):
     # print(cfg['hw']['win'].color)
 
 
+    cfg['hw']['win'].viewPos = [0,-8]
+
 
     # add pyglet keyboard stuff:
     pyg_keyboard = key.KeyStateHandler()
@@ -125,8 +127,8 @@ def doColorCalibration(ID=None, task=None, location=None):
         k = event.getKeys(['escape', 'space', 'q'])
 
         if k:
-            if k[0] in ['q']:
-                calibration_triggered
+            # if k[0] in ['q']:
+            #     calibration_triggered
             if k[0] in ['space','escape']:
                 break
 
@@ -251,7 +253,7 @@ def doColorCalibration(ID=None, task=None, location=None):
 
 
 
-def doBlindSpotMapping(ID=None,task=None,location=None):
+def doBlindSpotMapping(ID=None,task=None,location=None,offset=[0,0]):
     
     askQuestions = False
     expInfo = {}
@@ -260,7 +262,7 @@ def doBlindSpotMapping(ID=None,task=None,location=None):
         expInfo['ID'] = ''
         askQuestions = True
     if task == None:
-        expInfo['task'] = ['distHorizontal', 'distBinocular', 'distScaled']
+        expInfo['task'] = ['distHorizontal', 'distBinocular', 'distScaled', 'distCentred', 'distRotated']
         askQuestions = True
     # if hemifield == None:
     #     expInfo['hemifield'] = ['left','right']
@@ -330,6 +332,8 @@ def doBlindSpotMapping(ID=None,task=None,location=None):
 
     cfg = {}
     cfg['hw'] = setup
+
+    cfg['hw']['win'].viewPos = offset
 
     pyg_keyboard = key.KeyStateHandler()
     cfg['hw']['win'].winHandle.push_handlers(pyg_keyboard)
