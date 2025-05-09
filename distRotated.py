@@ -169,6 +169,14 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
     hiFusion = setup['fusion']['hi']
     loFusion = setup['fusion']['lo']
 
+    loFusion.rows = 2
+    loFusion.columns = 9
+
+    loFusion.pos = [0,-5]
+
+    hiFusion.rows = 9
+    hiFusion.columns = 2
+
     blindspot = setup['blindspotmarkers'][hemifield]
     # print(blindspot.fillColor)
     
@@ -235,12 +243,14 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
                      ["left-top", "left-bot"],
                      ["left-bot", "left-top"]]
         tar = tar_left
+        hiFusion.pos = [15,0]
     else:
         pos_array = [["righ-mid", "righ-top"],
                      ["righ-mid", "righ-bot"],
                      ["righ-top", "righ-bot"],
                      ["righ-bot", "righ-top"]]
         tar = tar_right
+        hiFusion.pos = [-15,0]
 
     pos_array_bsa = pos_array[0:2]
     pos_array_out = pos_array[2:4]
