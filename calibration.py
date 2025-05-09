@@ -378,7 +378,8 @@ def doBlindSpotMapping(ID=None,task=None,location=None,offset=[0,0]):
         # point.fillColor = [-1,-1,-1]
         # print(point.size)
         
-
+        print(cfg['hw']['fusion']['hi'].columns)
+        print(cfg['hw']['fusion']['hi'].rows)
 
         cfg['hw']['fusion']['hi'].resetProperties()
         cfg['hw']['fusion']['lo'].resetProperties()
