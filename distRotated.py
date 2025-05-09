@@ -36,6 +36,9 @@ from EyeTracking import localizeSetup, EyeTracker
 #### Initialize experiment
 ######
 
+# move 0,0 down by 12.38197 dva...
+# but 8 dva might be fine?
+
 def doDistRotatedTask(ID=None, hemifield=None, location=None):
 
     ## parameters
@@ -82,7 +85,7 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
     # ## path
     # main_path = 'C:/Users/clementa/Nextcloud/project_blindspot/blindspot_eye_tracker/'
     # data_path = main_path + 'data/'
-    main_path = '../data/distRotated/'
+    main_path = '../data/distance/'
     data_path = main_path
     eyetracking_path = main_path + 'eyetracking/' + ID + '/'
     
@@ -95,7 +98,7 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
     # create output file:
     x = 1
     # filename = '_dist_' + ('LH' if hemifield == 'left' else 'RH') + '_' + ID + '_'
-    filename = ID + '_distr_' + ('LH' if hemifield == 'left' else 'RH') + '_'
+    filename = ID + '_dist_' + ('LH' if hemifield == 'left' else 'RH') + '_'
     while (filename + str(x) + '.txt') in os.listdir(data_path):
         x += 1
     respFile = open(data_path + filename + str(x) + '.txt','w')
@@ -131,13 +134,13 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
 
 
     x = 1
-    et_filename = 'dstR' + ('LH' if hemifield == 'left' else 'RH')
+    et_filename = 'dist' + ('LH' if hemifield == 'left' else 'RH')
     while len(glob(eyetracking_path + et_filename + str(x) + '.*')):
         x += 1
 
     # get everything shared from central:
-    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distRotated', ID=ID) # data path is for the mapping data, not the eye-tracker data!
-    #setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distRotated', ID=ID, noEyeTracker=True) # data path is for the mapping data, not the eye-tracker data!
+    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distance', ID=ID) # data path is for the mapping data, not the eye-tracker data!
+
     print(setup['paths']) # not using yet, just testing
 
     # unpack all this
@@ -168,7 +171,6 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
     # print(blindspot.fillColor)
     
     fixation = setup['fixation']
-
 
     tracker = setup['tracker']
     
@@ -216,12 +218,12 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
 
     ## prepare trials
     positions = {
-        "left-top": [(spot_left[0]  + (-1 * ang_up_left),  spot_left[1]  - tar_left/2),  (spot_left[0]  + (-1 * ang_up_left),  spot_left[1]  + tar_left/2)],
-        "left-mid": [(spot_left[0]  + ( 0 * ang_up_left),  spot_left[1]  - tar_left/2),  (spot_left[0]  + ( 0 * ang_up_left),  spot_left[1]  + tar_left/2)],
-        "left-bot": [(spot_left[0]  + ( 1 * ang_up_left),  spot_left[1]  - tar_left/2),  (spot_left[0]  + ( 1 * ang_up_left),  spot_left[1]  + tar_left/2)],
-        "righ-top": [(spot_right[0] + ( 1 * ang_up_right), spot_right[1] - tar_right/2), (spot_right[0] + ( 1 * ang_up_right), spot_right[1] + tar_right/2)],
-        "righ-mid": [(spot_right[0] + ( 0 * ang_up_right), spot_right[1] - tar_right/2), (spot_right[0] + ( 0 * ang_up_right), spot_right[1] + tar_right/2)],
-        "righ-bot": [(spot_right[0] + (-1 * ang_up_right), spot_right[1] - tar_right/2), (spot_right[0] + (-1 * ang_up_right), spot_right[1] + tar_right/2)],
+        "left-top": [(spot_left[0]  - ang_up_left,  spot_left[1]  - tar_left/2),  (spot_left[0]  - ang_up_left,  spot_left[1]  + tar_left/2)],
+        "left-mid": [(spot_left[0]  +          00,  spot_left[1]  - tar_left/2),  (spot_left[0]  +          00,  spot_left[1]  + tar_left/2)],
+        "left-bot": [(spot_left[0]  + ang_up_left,  spot_left[1]  - tar_left/2),  (spot_left[0]  + ang_up_left,  spot_left[1]  + tar_left/2)],
+        "righ-top": [(spot_right[0] + ang_up_right, spot_right[1] - tar_right/2), (spot_right[0] + ang_up_right, spot_right[1] + tar_right/2)],
+        "righ-mid": [(spot_right[0] +           00, spot_right[1] - tar_right/2), (spot_right[0] +           00, spot_right[1] + tar_right/2)],
+        "righ-bot": [(spot_right[0] - ang_up_right, spot_right[1] - tar_right/2), (spot_right[0] - ang_up_right, spot_right[1] + tar_right/2)],
     }
 
     if hemifield == 'left':
@@ -231,33 +233,12 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
                      ["left-top", "left-bot"],
                      ["left-bot", "left-top"]]
         tar = tar_left
-
-        # middle between bottom points:
-        bp = pol2cart(spot_left[0]  + ( 1 * ang_up_left),  spot_left[1])
-
-        spot_cart = left_prop['cart']
-
-        hiFusion.pos = [ 15,     0]
-        loFusion.pos = [  7.5, -15]
-
     else:
         pos_array = [["righ-mid", "righ-top"],
                      ["righ-mid", "righ-bot"],
                      ["righ-top", "righ-bot"],
                      ["righ-bot", "righ-top"]]
         tar = tar_right
-
-        # middle between bottom points:
-        bp = pol2cart(spot_right[0] + (-1 * ang_up_right), spot_right[1])
-
-        spot_cart = right_prop['cart']
-
-        hiFusion.pos = [-15,     0]
-        loFusion.pos = [ -7.5, -15]
-
-
-    # point_offset = [0 - bp[0], 0]
-    point_offset = [-1*x for x in spot_cart]
 
     pos_array_bsa = pos_array[0:2]
     pos_array_out = pos_array[2:4]
@@ -289,7 +270,7 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
     event.clearEvents(eventType='keyboard') # just to be sure?
         
     #!!# calibrate
-    #####tracker.initialize() # this should be done in the central thing... dependent on location: in Toronto we need to override the calibrationTargets
+    #tracker.initialize() # this should be done in the central thing... dependent on location: in Toronto we need to override the calibrationTargets
 
     tracker.openfile()
     tracker.startcollecting()
@@ -369,11 +350,6 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
             point_1.pos = pol2cart(positions[pos[1]][0][0], positions[pos[1]][0][1]       + shift[1])
             point_2.pos = pol2cart(positions[pos[1]][1][0], positions[pos[1]][1][1] + dif + shift[1])
 
-        point_1.pos = [point_1.pos[0] + point_offset[0], point_1.pos[1] + point_offset[1]]
-        point_2.pos = [point_2.pos[0] + point_offset[0], point_2.pos[1] + point_offset[1]]
-        point_3.pos = [point_3.pos[0] + point_offset[0], point_3.pos[1] + point_offset[1]]
-        point_4.pos = [point_4.pos[0] + point_offset[0], point_4.pos[1] + point_offset[1]]
-
         if eye[which_stair] == hemifield:
             point_1.fillColor = col_ipsi
             point_2.fillColor = col_ipsi
@@ -395,7 +371,37 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
         # not sure, but the next while loop seems to be doing the same thing as "waitForFixation()"
         # 
 
+        # trial_clock.reset()
+        # gaze_out = False
+        # while True and not abort:
+        #     # Start detecting time
+        #     t = trial_clock.getTime()
+            
+        #     #!!# get position at each t
+        #     #!!# every 100 ms, check that positions were on average <2 dva from center
+        #     #!!# after 5 consecutive intervals (500 ms) with correct fixation, break to start trial
+        #     #!!# for now we break automatically:
+        #     if t > .5:
+        #         break
+        #     #!!#
 
+        #     hiFusion.draw()
+        #     loFusion.draw()
+        #     fixation.draw()
+        #     win.flip()
+
+        #     k = event.getKeys(['q'])
+        #     if k:
+        #         if 'q' in k:
+        #             abort = True
+        #             break
+            
+        #     # set up auto recalibrate after 5s
+        #     if t > 5:
+        #         recalibrate = True
+        #         gaze_out = True
+        #         break
+        
         # should the trial start be here, or maybe when waiting for fixation?
         tracker.comment('start trial %d'%(trial))
 
@@ -523,7 +529,9 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
                 event.clearEvents(eventType='keyboard') # just to be sure?
                     
                 #!!# calibrate
+                # tracker.stopcollecting() # do we even have to stop/start collecting?
                 tracker.calibrate()
+                # tracker.startcollecting()
                 recalibrate = False
 
                 
@@ -565,8 +573,10 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
                         break
 
                     #!!# calibrate
+                    # tracker.stopcollecting() # do we even have to stop/start collecting?
                     tracker.calibrate()
- 
+                    # tracker.startcollecting()
+
                     fixation.draw()
                     win.flip()
                     k = event.waitKeys()
@@ -701,4 +711,4 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
 
 
 if __name__ == "__main__":
-    doDistRotatedTask()
+    doDistanceTask()
