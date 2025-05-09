@@ -1645,9 +1645,9 @@ def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG',
     if task in ['distRotated']:
         print('rotated fusion stims')
         fusion = {'hi': fusionStim(win    = win,
-                                   rows    = 15,
+                                   rows    = 11,
                                    columns = 2,
-                                   pos    = [0,20],
+                                   pos    = [0,15],
                                    colors = fcols),
                   'lo': fusionStim(win    = win,
                                    rows    = 3,
