@@ -353,6 +353,7 @@ def doBlindSpotMapping(ID=None,task=None,location=None,offset=[0,0]):
 
     if task == 'distRotated':
         pass
+        # or else?
     else:
         cfg['hw']['fusion']['hi'].rows = 7
         cfg['hw']['fusion']['hi'].columns = 3
