@@ -1643,8 +1643,9 @@ def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG',
                                    colors = fcols)}
 
     if task in ['distRotated']:
+        print('rotated fusion stims')
         fusion = {'hi': fusionStim(win    = win,
-                                   rows    = 12,
+                                   rows    = 15,
                                    columns = 2,
                                    pos    = [0,20],
                                    colors = fcols),
@@ -1655,6 +1656,7 @@ def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG',
                                    colors = fcols)}
 
     if task in ['distHorizontal','distBinocular','distance', 'distScaled']:
+
         fusion = {'hi': fusionStim(win    = win,
                                    pos    = [0,7],
                                    colors = fcols),
@@ -1831,6 +1833,8 @@ class fusionStim:
         self.columns = columns
         self.square  = square
         self.units   = units
+
+        print([self.rows, self.columns])
 
         self.resetProperties()
 
