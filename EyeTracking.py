@@ -1472,7 +1472,7 @@ class EyeTracker:
 
 
 
-def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG', colors=None, task=None, ID=None, noEyeTracker=False ):
+def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG', colors=None, task=None, ID=None, noEyeTracker=False, offset=[0,0] ):
     
     # sanity checks on trackEyes, filefolder and filename are done by the eyetracker object
 
@@ -1630,7 +1630,7 @@ def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG',
     if 'back' in colors.keys():
         fcols[1] = colors['back']
 
-    if task in ['area', 'curvature', 'orientation', 'distRotated']:
+    if task in ['area', 'curvature', 'orientation', 'distCentred']:
         fusion = {'hi': fusionStim(win    = win,
                                    rows    = 9,
                                    columns = 2,
