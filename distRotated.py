@@ -218,12 +218,12 @@ def doDistRotatedTask(ID=None, hemifield=None, location=None):
 
     ## prepare trials
     positions = {
-        "left-top": [(spot_left[0]  - ang_up_left,  spot_left[1]  - tar_left/2),  (spot_left[0]  - ang_up_left,  spot_left[1]  + tar_left/2)],
-        "left-mid": [(spot_left[0]  +          00,  spot_left[1]  - tar_left/2),  (spot_left[0]  +          00,  spot_left[1]  + tar_left/2)],
-        "left-bot": [(spot_left[0]  + ang_up_left,  spot_left[1]  - tar_left/2),  (spot_left[0]  + ang_up_left,  spot_left[1]  + tar_left/2)],
-        "righ-top": [(spot_right[0] + ang_up_right, spot_right[1] - tar_right/2), (spot_right[0] + ang_up_right, spot_right[1] + tar_right/2)],
-        "righ-mid": [(spot_right[0] +           00, spot_right[1] - tar_right/2), (spot_right[0] +           00, spot_right[1] + tar_right/2)],
-        "righ-bot": [(spot_right[0] - ang_up_right, spot_right[1] - tar_right/2), (spot_right[0] - ang_up_right, spot_right[1] + tar_right/2)],
+        "left-top": [(spot_left[0]  + (-3 * ang_up_left),  spot_left[1]  - tar_left/2),  (spot_left[0]  + (-3 * ang_up_left),  spot_left[1]  + tar_left/2)],
+        "left-mid": [(spot_left[0]  + (-2 * ang_up_left),  spot_left[1]  - tar_left/2),  (spot_left[0]  + (-2 * ang_up_left),  spot_left[1]  + tar_left/2)],
+        "left-bot": [(spot_left[0]  + (-1 * ang_up_left),  spot_left[1]  - tar_left/2),  (spot_left[0]  + (-1 * ang_up_left),  spot_left[1]  + tar_left/2)],
+        "righ-top": [(spot_right[0] + ( 3 * ang_up_right), spot_right[1] - tar_right/2), (spot_right[0] + ( 3 * ang_up_right), spot_right[1] + tar_right/2)],
+        "righ-mid": [(spot_right[0] + ( 2 * ang_up_right), spot_right[1] - tar_right/2), (spot_right[0] + ( 2 * ang_up_right), spot_right[1] + tar_right/2)],
+        "righ-bot": [(spot_right[0] + ( 1 * ang_up_right), spot_right[1] - tar_right/2), (spot_right[0] + ( 1 * ang_up_right), spot_right[1] + tar_right/2)],
     }
 
     if hemifield == 'left':
