@@ -357,13 +357,13 @@ def doBlindSpotMapping(ID=None,task=None,location=None,offset=[0,0]):
     cfg['hw']['fusion']['lo'].columns = 3
 
 
-    # if offset[1] != 0:
+    if offset[1] != 0:
 
-    #     cfg['hw']['fusion']['lo'].pos =  [cfg['hw']['fusion']['lo'].pos[0], cfg['hw']['fusion']['lo'].pos[1] + (offset[1]/2)]
-    #     cfg['hw']['fusion']['lo'].rows = int(max(1, round(cfg['hw']['fusion']['lo'].rows + (offset[1]/2))))
+        cfg['hw']['fusion']['lo'].pos =  [cfg['hw']['fusion']['lo'].pos[0], cfg['hw']['fusion']['lo'].pos[1] + (offset[1]/2)]
+        cfg['hw']['fusion']['lo'].rows = int(max(1, round(cfg['hw']['fusion']['lo'].rows + (offset[1]/2))))
 
-    #     cfg['hw']['fusion']['hi'].pos =  [cfg['hw']['fusion']['lo'].pos[0], cfg['hw']['fusion']['lo'].pos[1] + (offset[1]/2)]
-    #     cfg['hw']['fusion']['hi'].rows = int(max(1, round(cfg['hw']['fusion']['hi'].rows - (offset[1]/2))))
+        cfg['hw']['fusion']['hi'].pos =  [cfg['hw']['fusion']['hi'].pos[0], cfg['hw']['fusion']['hi'].pos[1] + (offset[1]/2)]
+        cfg['hw']['fusion']['hi'].rows = int(max(1, round(cfg['hw']['fusion']['hi'].rows - (offset[1]/2))))
 
     
 
