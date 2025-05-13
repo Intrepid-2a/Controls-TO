@@ -13,6 +13,7 @@ from utilities import *
 from calibration import *
 from distHorizontal import *
 from distBinocular import *
+from distUpturned import *
 
 from distScaled import *
 
@@ -66,41 +67,20 @@ class MyFrame(wx.Frame):
         self.scaled_left = wx.Button(self, -1, "left")
         self.scaled_right = wx.Button(self, -1, "right")
 
+        self.upturned_count = wx.StaticText(self, -1, "#")
+        self.upturned_text = wx.StaticText(self, -1, "Upturned:")
+        self.upturned_color = wx.Button(self, -1, "color")
+        self.upturned_mapping = wx.Button(self, -1, "mapping")
+        self.upturned_left = wx.Button(self, -1, "left")
+        self.upturned_right = wx.Button(self, -1, "right")
+
         self.binocular_count = wx.StaticText(self, -1, "#")
         self.binocular_text = wx.StaticText(self, -1, "Binocular:")
         self.binocular_color = wx.Button(self, -1, "color")
         self.binocular_mapping = wx.Button(self, -1, "mapping")
         self.binocular_task = wx.Button(self, -1, "run")
-        # self.curve_right = wx.Button(self, -1, "right")
-
-        # self.dist_count = wx.StaticText(self, -1, "#")
-        # self.dist_text = wx.StaticText(self, -1, "DISTANCE:")
-        # self.dist_color = wx.Button(self, -1, "color")
-        # self.dist_mapping = wx.Button(self, -1, "mapping")
-        # self.dist_left = wx.Button(self, -1, "left")
-        # self.dist_right = wx.Button(self, -1, "right")
 
 
-        # control elements:
-        # self.ori_text = wx.StaticText(self, -1, "Orientation:")
-        # self.ori_color = wx.Button(self, -1, "color")
-        # self.ori_mapping = wx.Button(self, -1, "mapping")
-        # self.ori_task = wx.Button(self, -1, "adjust")
-        # self.hor_task = wx.Button(self, -1, "stairs")
-
-
-        # # synchronization elements:
-        # self.folder_check = wx.CheckBox(self, -1, "folders")
-        # self.folder_button = wx.Button(self, -1, "make")
-
-        # self.clone_check = wx.CheckBox(self, -1, "GitHub")
-        # self.clone_button = wx.Button(self, -1, "clone")
-
-        # self.pull_check = wx.CheckBox(self, -1, "GitHub")
-        # self.pull_button = wx.Button(self, -1, "pull")
-
-        # self.upload_check = wx.CheckBox(self, -1, "to OSF")
-        # self.upload_button = wx.Button(self, -1, "upload")
 
         self.__set_properties()
         self.__do_layout()
@@ -133,6 +113,10 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.runTask, self.scaled_left)
         self.Bind(wx.EVT_BUTTON, self.runTask, self.scaled_right)
 
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.upturned_color)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.upturned_mapping)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.upturned_left)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.upturned_right)
         # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_color)
         # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_mapping)
         # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_left)
@@ -217,6 +201,13 @@ class MyFrame(wx.Frame):
         taskrun_grid.Add(self.scaled_left, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.scaled_right, -1, wx.ALIGN_LEFT, 0)
 
+        taskrun_grid.Add(self.upturned_count, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.upturned_text, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.upturned_color, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.upturned_mapping, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.upturned_left, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.upturned_right, -1, wx.ALIGN_LEFT, 0)        
+
         taskrun_grid.Add(self.binocular_count, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.binocular_text, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.binocular_color, -1, wx.ALIGN_LEFT, 0)
@@ -224,46 +215,8 @@ class MyFrame(wx.Frame):
         taskrun_grid.Add(self.binocular_task, -1, wx.ALIGN_LEFT, 0)
         # taskrun_grid.Add(self.binocular_right, -1, wx.ALIGN_LEFT, 0)
 
-        # taskrun_grid.Add(self.dist_count, -1, wx.ALIGN_LEFT, 0)
-        # taskrun_grid.Add(self.dist_text, -1, wx.ALIGN_LEFT, 0)
-        # taskrun_grid.Add(self.dist_color, -1, wx.ALIGN_LEFT, 0)
-        # taskrun_grid.Add(self.dist_mapping, -1, wx.ALIGN_LEFT, 0)
-        # taskrun_grid.Add(self.dist_left, -1, wx.ALIGN_LEFT, 0)
-        # taskrun_grid.Add(self.dist_right, -1, wx.ALIGN_LEFT, 0)
-
-
-        # add elements to control grid:
-        # taskrun_grid.Add((0,0), -1, wx.ALIGN_LEFT, 0)
-        # taskrun_grid.Add(self.ori_text, -1, wx.ALIGN_LEFT, 0)
-        # taskrun_grid.Add(self.ori_color, -1, wx.ALIGN_LEFT, 0)
-        # taskrun_grid.Add(self.ori_mapping, -1, wx.ALIGN_LEFT, 0)
-        # taskrun_grid.Add(self.ori_task, -1, wx.ALIGN_LEFT, 0)
-        # taskrun_grid.Add(self.hor_task, -1, wx.ALIGN_LEFT, 0)
-        # taskrun_grid.Add((0,0), -1, wx.ALIGN_LEFT, 0)
-
-
         # add task-run grid to main grid:
         main_grid.Add(taskrun_grid)
-
-
-        # # add control grid to main grid:
-        # main_grid.Add(control_grid)
-
-        # # add elements to synch grid:
-        # synch_grid.Add(self.folder_button, -1, wx.ALIGN_LEFT, 0)
-        # synch_grid.Add(self.folder_check, -1, wx.ALIGN_LEFT, 0)
-
-        # synch_grid.Add(self.clone_button, -1, wx.ALIGN_LEFT, 0)
-        # synch_grid.Add(self.clone_check, -1, wx.ALIGN_LEFT, 0)
-
-        # synch_grid.Add(self.pull_button, -1, wx.ALIGN_LEFT, 0)
-        # synch_grid.Add(self.pull_check, -1, wx.ALIGN_LEFT, 0)
-
-        # synch_grid.Add(self.upload_button, -1, wx.ALIGN_LEFT, 0)
-        # synch_grid.Add(self.upload_check, -1, wx.ALIGN_LEFT, 0)
-        # # add synch grid to main grid:
-        # main_grid.Add(synch_grid)
-
 
 
         self.SetSizer(main_grid)
@@ -284,6 +237,7 @@ class MyFrame(wx.Frame):
         counts = dataInfo['counts']
         self.horizontal_count.SetLabel( '%d (%d)'%(counts['distHorizontal'], counts['all']) )
         self.scaled_count.SetLabel( '%d (%d)'%(counts['distScaled'], counts['all']) )
+        self.upturned_count.SetLabel( '%d (%d)'%(counts['distUpturned'], counts['all']) )
         self.binocular_count.SetLabel( '%d (%d)'%(counts['distBinocular'], counts['all']) )
         # self.dist_count.SetLabel( '%d (%d)'%(counts['distance'], counts['all']) )
 
@@ -332,6 +286,16 @@ class MyFrame(wx.Frame):
             self.scaled_left.Enable()
             self.scaled_right.Enable()
 
+        self.upturned_color.Enable()
+        self.upturned_mapping.Disable()
+        if info['distUpturned']['color']:
+            self.upturned_mapping.Enable()
+        self.upturned_left.Disable()
+        self.upturned_right.Disable()
+        if info['distUpturned']['mapping']:
+            self.upturned_left.Enable()
+            self.upturned_right.Enable()
+
         self.binocular_color.Enable()
         self.binocular_mapping.Disable()
         if info['distBinocular']['color']:
@@ -340,25 +304,7 @@ class MyFrame(wx.Frame):
         if info['distBinocular']['mapping']:
             self.binocular_task.Enable()
         
-        # self.curve_color.Enable()
-        # self.curve_mapping.Disable()
-        # if info['curvature']['color']:
-        #     self.curve_mapping.Enable()
-        # self.curve_left.Disable()
-        # self.curve_right.Disable()
-        # if info['curvature']['mapping']:
-        #     self.curve_left.Enable()
-        #     self.curve_right.Enable()
 
-        # self.ori_color.Enable()
-        # self.ori_mapping.Disable()
-        # if info['orientation']['color']:
-        #     self.ori_mapping.Enable()
-        # self.ori_task.Disable()
-        # self.hor_task.Disable()
-        # if info['orientation']['mapping']:
-        #     self.ori_task.Enable()
-        #     self.hor_task.Enable()
 
 
     def runTask(self, event):
@@ -371,46 +317,29 @@ class MyFrame(wx.Frame):
         subtask = None
 
         buttonId = event.Id
+        offset = [0,0]
         if buttonId in [self.horizontal_color.Id, self.horizontal_mapping.Id, self.horizontal_left.Id, self.horizontal_right.Id]:
             task = 'distHorizontal'
         if buttonId in [self.scaled_color.Id, self.scaled_mapping.Id, self.scaled_left.Id, self.scaled_right.Id]:
             task = 'distScaled'
         if buttonId in [self.binocular_color.Id, self.binocular_mapping.Id, self.binocular_task.Id]:
             task = 'distBinocular'
-        # if buttonId in [self.dist_color.Id, self.dist_mapping.Id, self.dist_left.Id, self.dist_right.Id]:
-        #     task = 'distance'
-        # if buttonId in [self.area_color.Id, self.area_mapping.Id, self.area_left.Id, self.area_right.Id]:
-        #     task = 'area'
-        # if buttonId in [self.curve_color.Id, self.curve_mapping.Id, self.curve_left.Id, self.curve_right.Id]:
-        #     task = 'curvature'
-        # if buttonId in [self.ori_color.Id, self.ori_mapping.Id, self.ori_task.Id, self.hor_task.Id]:
-        #     task = 'orientation'
+        if buttonId in [self.upturned_color.Id, self.upturned_mapping.Id, self.upturned_left.Id, self.upturned_right.Id]:
+            task = 'distUpturned'
+            offset = [0,-10]
 
-        if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.binocular_color.Id]:
+
+        if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.upturned_color.Id, self.binocular_color.Id]:
             subtask = 'color'
-        if buttonId in [self.horizontal_mapping.Id, self.scaled_mapping.Id, self.binocular_mapping.Id]:
+        if buttonId in [self.horizontal_mapping.Id, self.scaled_mapping.Id, self.upturned_mapping.Id, self.binocular_mapping.Id]:
             subtask = 'mapping'
-        if buttonId in [self.horizontal_left.Id, self.scaled_left.Id]:
+        if buttonId in [self.horizontal_left.Id, self.scaled_left.Id, self.upturned_left.Id]:
             subtask = 'left'
-        if buttonId in [self.horizontal_right.Id, self.scaled_right.Id]:
+        if buttonId in [self.horizontal_right.Id, self.scaled_right.Id, self.upturned_right.Id]:
             subtask = 'right'
         if buttonId in [self.binocular_task.Id]:
             subtask = 'run'
 
-        # if buttonId in [self.dist_color.Id,   self.area_color.Id,   self.curve_color.Id,   self.ori_color.Id]:
-        #     subtask = 'color'
-        # if buttonId in [self.dist_mapping.Id, self.area_mapping.Id, self.curve_mapping.Id, self.ori_mapping.Id]:
-        #     subtask = 'mapping'
-        # if buttonId in [self.dist_left.Id,    self.area_left.Id,    self.curve_left.Id]:
-        #     subtask = 'left'
-        # if buttonId in [self.dist_right.Id,   self.area_right.Id,   self.curve_right.Id]:
-        #     subtask = 'right'
-
-
-        # if buttonId in [self.ori_task.Id]:
-        #     subtask = 'orientation'
-        # if buttonId in [self.hor_task.Id]:
-        #     subtask = 'horizontal'
 
         if subtask == None:
             print('no subtask')
@@ -428,7 +357,7 @@ class MyFrame(wx.Frame):
 
         if subtask == 'mapping':
             # print('do blind spot mpapping')
-            doBlindSpotMapping(ID=self.participantID.GetValue(), task=task, location=self.location)
+            doBlindSpotMapping(ID=self.participantID.GetValue(), task=task, location=self.location, offset=offset)
             return
 
         if task == 'distHorizontal':
@@ -441,60 +370,16 @@ class MyFrame(wx.Frame):
             doDistScaledTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
             return
 
+        if task == 'distUpturned':
+            # print('do distance task')
+            doDistUpturnedTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
+            return
+
         if task == 'distBinocular':
             # print('do distance task')
             doDistBinocularTask(ID=self.participantID.GetValue(), location=self.location)
             return
 
-
-        # if task == 'area':
-        #     # print('do distance task')
-        #     doAreaTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
-        #     return
-
-        # if task == 'distance':
-        #     # print('do distance task')
-        #     doDistanceTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
-        #     return
-
-        # if task == 'curvature':
-        #     # print('do curvature task')
-        #     doCurvatureTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
-        #     return
-
-        # if task == 'orientation':
-        #     if subtask == 'orientation':
-        #         doOrientationTask(ID=self.participantID.GetValue(), location=self.location)
-        #         return
-        #     if subtask == 'horizontal':
-        #         doHorizontalTask(ID=self.participantID.GetValue(), location=self.location)
-        #         return
-
-
-    def disableChecks(self):
-        pass
-        # self.folder_check.SetValue(False)
-        # self.clone_check.SetValue(False)
-        # self.pull_check.SetValue(False)
-        # self.upload_check.SetValue(False)
-
-    def makeDataFolders(self, event):
-        pass
-        # if self.folder_check.GetValue():
-        #     utilities.setupDataFolders()
-        # self.disableChecks()
-
-    def cloneGitHub(self, event):
-        pass
-        # if self.clone_check.GetValue():
-        #     utilities.pullGitRepos(repos='all', main=True, clone=True)
-        # self.disableChecks()
-
-    def pullGitHub(self, event):
-        pass
-        # if self.pull_check.GetValue():
-        #     utilities.pullGitRepos(repos='all', main=True, clone=False)
-        # self.disableChecks()
 
 
 
