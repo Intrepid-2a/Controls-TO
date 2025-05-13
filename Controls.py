@@ -142,7 +142,7 @@ class MyFrame(wx.Frame):
 
     def __set_properties(self):
         self.SetTitle("Intrepid-2a Experiment Controls")
-        self.disableChecks()
+        # self.disableChecks()
         self.selectLocation()
         # update list of choices for existing participants
         self.refresh()
