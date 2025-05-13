@@ -200,7 +200,7 @@ def getParticipantTaskInfo(ID):
 
     info = {}
 
-    for task in ['distance', 'distHorizontal', 'distScaled', 'distUpturned' 'distBinocular']:
+    for task in ['distance', 'distHorizontal', 'distScaled', 'distUpturned', 'distBinocular']:
         info[task] = {}
         subtasks = ['color','mapping','RH','LH']
         if task == 'distBinocular':
@@ -307,7 +307,7 @@ def getGeneralDataInfo():
                'distHorizontal': taskParticipants['distHorizontal'],
                'distBinocular':  taskParticipants['distBinocular'],
                'distScaled'   :  taskParticipants['distScaled'],
-               'distUpturned' :  taskParticipants['distUpturned'] }
+               'distUpturned' :  taskParticipants['distUpturned'], }
 
     for key in taskParticipants.keys():
         taskParticipants[key] = len(taskParticipants[key])
