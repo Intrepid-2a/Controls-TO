@@ -200,7 +200,7 @@ def getParticipantTaskInfo(ID):
 
     info = {}
 
-    for task in ['area', 'curvature', 'distance', 'orientation', 'distHorizontal', 'distScaled', 'distBinocular']:
+    for task in ['distance', 'distHorizontal', 'distScaled', 'distUpturned' 'distBinocular']:
         info[task] = {}
         subtasks = ['color','mapping','RH','LH']
         if task == 'distBinocular':
@@ -229,7 +229,8 @@ def getGeneralDataInfo():
     tasks = ['distance',
              'distHorizontal',
              'distBinocular',
-             'distScaled']
+             'distScaled',
+             'distUpturned']
     subtasks = ['',
                 'color',
                 'mapping']
@@ -240,7 +241,8 @@ def getGeneralDataInfo():
                         # 'curvature':[],
                         'distHorizontal':[],
                         'distBinocular':[],
-                        'distScaled':[]}
+                        'distScaled':[],
+                        'distUpturned':[]}
 
 
     for task in tasks:
@@ -264,6 +266,8 @@ def getGeneralDataInfo():
                 basename = os.path.join('..', 'data', task, ID + '_dists')
             elif task == 'distBinocular':
                 basename = os.path.join('..', 'data', task, ID + '_distb')
+            elif task == 'distUpturned':
+                basename = os.path.join('..', 'data', task, ID + '_distt')
             else:
                 basename = os.path.join('..', 'data', task, ID + '_' + task)
 
@@ -294,7 +298,7 @@ def getGeneralDataInfo():
                     taskParticipants[task] += [ID]
 
     # taskParticipants['all'] = list(set(taskParticipants['area']).intersection(set(taskParticipants['curvature'])).intersection(set(taskParticipants['distance'])).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distBinocular'])))
-    taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])))
+    taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distUpturned'])))
 
     bytask = { 
             #    'area':           taskParticipants['area'], 
@@ -302,7 +306,8 @@ def getGeneralDataInfo():
                'distance':       taskParticipants['distance'],
                'distHorizontal': taskParticipants['distHorizontal'],
                'distBinocular':  taskParticipants['distBinocular'],
-               'distScaled'   :  taskParticipants['distScaled'] }
+               'distScaled'   :  taskParticipants['distScaled'],
+               'distUpturned' :  taskParticipants['distUpturned'] }
 
     for key in taskParticipants.keys():
         taskParticipants[key] = len(taskParticipants[key])
