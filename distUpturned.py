@@ -146,7 +146,7 @@ def doDistUpturnedTask(ID=None, hemifield=None, location=None):
     # unpack all this
     win = setup['win']
 
-    win.viewPos = [0,-12]
+    win.viewPos = [0,-10]
 
 
     pyg_keyboard = key.KeyStateHandler()
@@ -324,7 +324,8 @@ def doDistUpturnedTask(ID=None, hemifield=None, location=None):
     pos_arrays = [pos_array_bsa[:]] * 4 + [pos_array_out[:]] * 4
 
     # intervals = [3.5,3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
-    intervals = [7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7]
+    # intervals = [7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7]
+    intervals = [5.25,  4.50,  3.75,  3.00,  2.25,  1.50,  0.75,  0.00, -0.75, -1.50, -2.25, -3.00, -3.75, -4.50, -5.25]
     position = [[]] * 8
     trial_stair = [0] * 8
     revs = [0] * 8
@@ -567,7 +568,7 @@ def doDistUpturnedTask(ID=None, hemifield=None, location=None):
                 hiFusion.draw()
                 loFusion.draw()
                 blindspot.draw()
-                visual.TextStim(win, '#', height = letter_height, color = col_both, pos=[0,-12]).draw()
+                visual.TextStim(win, '#', height = letter_height, color = col_both, pos=[0,-10]).draw()
                 print('# auto abort')
                 win.flip()
 
