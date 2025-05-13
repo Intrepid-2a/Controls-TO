@@ -146,7 +146,7 @@ def doDistUpturnedTask(ID=None, hemifield=None, location=None):
     # unpack all this
     win = setup['win']
 
-    win.viewPos = [0,-8]
+    win.viewPos = [0,-12]
 
 
     pyg_keyboard = key.KeyStateHandler()
@@ -172,9 +172,9 @@ def doDistUpturnedTask(ID=None, hemifield=None, location=None):
     loFusion.rows = 2
     loFusion.columns = 9
 
-    loFusion.pos = [0,-10]
+    loFusion.pos = [0,-5]
 
-    hiFusion.rows = 9
+    hiFusion.rows = 11
     hiFusion.columns = 2
 
     blindspot = setup['blindspotmarkers'][hemifield]
@@ -323,7 +323,8 @@ def doDistUpturnedTask(ID=None, hemifield=None, location=None):
     eye = ['left', 'left', 'right', 'right'] * 2
     pos_arrays = [pos_array_bsa[:]] * 4 + [pos_array_out[:]] * 4
 
-    intervals = [3.5,3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
+    # intervals = [3.5,3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
+    intervals = [7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7]
     position = [[]] * 8
     trial_stair = [0] * 8
     revs = [0] * 8
