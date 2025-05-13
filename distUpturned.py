@@ -567,7 +567,7 @@ def doDistUpturnedTask(ID=None, hemifield=None, location=None):
                 hiFusion.draw()
                 loFusion.draw()
                 blindspot.draw()
-                visual.TextStim(win, '#', height = letter_height, color = col_both, pos=[0,-8]).draw()
+                visual.TextStim(win, '#', height = letter_height, color = col_both, pos=[0,-12]).draw()
                 print('# auto abort')
                 win.flip()
 
