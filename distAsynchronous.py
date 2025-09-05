@@ -40,7 +40,8 @@ def doDistAsynchronousTask(ID=None, hemifield=None, location=None):
 
     ## parameters
     nRevs   = 10   #
-    nTrials = 25  # at least 10 reversals and 25 trials for each staircase (~ 25*8 staircases = 200 trials)
+    nTrials = 30
+    # nTrials = 25  # at least 10 reversals and 25 trials for each staircase (~ 25*8 staircases = 200 trials)
     # letter_height = 40 # 40 dva is pretty big?
     letter_height = 1
 
@@ -318,7 +319,7 @@ def doDistAsynchronousTask(ID=None, hemifield=None, location=None):
     pos_arrays = [pos_array_bsa[:]] * 4 + [pos_array_out[:]] * 4
 
     intervals = [3.5, 3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
-    intervals = [3.5,    2.5,    1.5, 1, .5, 0, -.5, -1, -1.5,     -2.5,     -3.5]
+    # intervals = [3.5,    2.5,    1.5, 1, .5, 0, -.5, -1, -1.5,     -2.5,     -3.5]
     position = [[]] * 8
     trial_stair = [0] * 8
     revs = [0] * 8
