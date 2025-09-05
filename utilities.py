@@ -149,7 +149,7 @@ def collectParticipantInfo():
                 'mapping'     : False,
                 'left'        : False,
                 'right'       : False
-            }
+            },
         'distBinocular' :
             {
                 'color'       : False,
