@@ -81,7 +81,7 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     trackEyes = [True, True]
 
     # ## path
-    main_path = '../data/distAsynchronous/'
+    main_path = '../data/distScaledAsynchronous/'
     data_path = main_path
     eyetracking_path = main_path + 'eyetracking/' + ID + '/'
     
@@ -94,7 +94,7 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     # create output file:
     x = 1
     # filename = '_dist_' + ('LH' if hemifield == 'left' else 'RH') + '_' + ID + '_'
-    filename = ID + '_dista_' + ('LH' if hemifield == 'left' else 'RH') + '_'
+    filename = ID + '_distsa_' + ('LH' if hemifield == 'left' else 'RH') + '_'
     while (filename + str(x) + '.txt') in os.listdir(data_path):
         x += 1
     respFileName = data_path + filename + str(x) + '.txt'
@@ -131,12 +131,12 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
 
 
     x = 1
-    et_filename = 'dstA' + ('LH' if hemifield == 'left' else 'RH')
+    et_filename = 'dSA' + ('LH' if hemifield == 'left' else 'RH')
     while len(glob(eyetracking_path + et_filename + str(x) + '.*')):
         x += 1
 
     # get everything shared from central:
-    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distAsynchronous', ID=ID) # data path is for the mapping data, not the eye-tracker data!
+    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distScaledAsynchronous', ID=ID) # data path is for the mapping data, not the eye-tracker data!
 
     # setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distHorizontal', ID=ID, noEyeTracker=True ) # data path is for the mapping data, not the eye-tracker data!
     # print(setup['paths']) # not using yet, just testing
@@ -332,7 +332,7 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     intervals = [3.5, 3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
     # intervals = [3.5,    2.5,    1.5, 1, .5, 0, -.5, -1, -1.5,     -2.5,     -3.5]
     intervals = [ 1.05, 0.9, 0.75, 0.6, 0.45, 0.3, 0.15, 0.0, -0.15, -0.3, -0.45, -0.6, -0.75, -0.9, -1.05 ]
-    
+
     position = [[]] * 8
     trial_stair = [0] * 8
     revs = [0] * 8
