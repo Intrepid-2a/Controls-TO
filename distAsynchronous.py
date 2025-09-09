@@ -768,4 +768,4 @@ def doDistAsynchronousTask(ID=None, hemifield=None, location=None):
 
 
 if __name__ == "__main__":
-    doDistHorizontalTask()
+    doDistAsynchronousTask()
