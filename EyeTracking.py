@@ -1655,7 +1655,7 @@ def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG',
                                    pos    = [0,-5],
                                    colors = fcols)}
 
-    if task in ['distHorizontal','distBinocular','distance', 'distScaled', 'distAsynchronous']:
+    if task in ['distHorizontal','distBinocular','distance', 'distScaled', 'distAsynchronous', 'distScaledAsynchronous']:
 
         fusion = {'hi': fusionStim(win    = win,
                                    pos    = [0,7],
