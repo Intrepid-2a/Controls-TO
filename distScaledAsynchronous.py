@@ -136,9 +136,9 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
         x += 1
 
     # get everything shared from central:
-    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distScaledAsynchronous', ID=ID) # data path is for the mapping data, not the eye-tracker data!
+    # setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distScaledAsynchronous', ID=ID) # data path is for the mapping data, not the eye-tracker data!
 
-    # setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distHorizontal', ID=ID, noEyeTracker=True ) # data path is for the mapping data, not the eye-tracker data!
+    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distScaledAsynchronous', ID=ID, noEyeTracker=True ) # data path is for the mapping data, not the eye-tracker data!
     # print(setup['paths']) # not using yet, just testing
 
     # unpack all this
@@ -171,7 +171,7 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     fixation   = setup['fixation']
     fixation_x = setup['fixation_x']
 
-    tracker = setup['tracker']
+    # tracker = setup['tracker']
     
 
 
@@ -215,8 +215,8 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     ang_up_right = right_prop['ang_up']
     tar_right    = right_prop['tar']
 
-    left_scale = (spot_left[1]  - tar_left/2)  / (spot_left[1]  + tar_left/2)
-    right_scale = (spot_right[1] - tar_right/2) / (spot_right[1] + tar_right/2)
+    left_scale = (spot_left[1]  - tar_left/2 - 1)  / (spot_left[1]  + tar_left/2)
+    right_scale = (spot_right[1] - tar_right/2 - 1) / (spot_right[1] + tar_right/2)
 
 
     ## prepare trials
@@ -257,6 +257,8 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
         scale = right_scale
         dir =  1
 
+    tar = tar * scale
+
     pos_array_bsa = pos_array[0:2]
     pos_array_out = pos_array[2:4]
 
@@ -294,9 +296,9 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     #!!# calibrate
     ####tracker.initialize() # this should be done in the central thing... dependent on location: in Toronto we need to override the calibrationTargets
 
-    tracker.openfile()
-    tracker.startcollecting()
-    tracker.calibrate()
+    # tracker.openfile()
+    # tracker.startcollecting()
+    # tracker.calibrate()
     
     fixation.draw()
     win.flip()
@@ -406,12 +408,12 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
         loFusion.resetProperties()
 
         ## pre trial fixation
-        tracker.waitForFixation()
+        # tracker.waitForFixation()
         gaze_out = False #? not sure what this variable is for but it needs to exist?
 
         
         # should the trial start be here, or maybe when waiting for fixation?
-        tracker.comment('start trial %d'%(trial))
+        # tracker.comment('start trial %d'%(trial))
 
         # in reverse order, so we can pop() them off:
         stim_comments = ['pair 2 off', 'pair 2 on', 'pair 1 off', 'pair 1 on']
@@ -430,10 +432,10 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
                 #!!# if position is invalid or >2 dva, set gaze in region to False
                 #!!# may also record gazes in file here and do stuff like showing gaze position if simulating with mouse
                 
-                if not tracker.gazeInFixationWindow():
-                    gaze_out = True
-                    tracker.comment('trial aborted')
-                    break
+                # if not tracker.gazeInFixationWindow():
+                #     gaze_out = True
+                #     tracker.comment('trial aborted')
+                #     break
 
                 fixation.draw()
                 blindspot.draw()
@@ -441,16 +443,16 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
                 loFusion.draw()
 
                 if .1 <= trial_clock.getTime() < .7:
-                    if len(stim_comments) == 4:
-                        tracker.comment(stim_comments.pop()) # pair 1 on
+                    # if len(stim_comments) == 4:
+                    #     tracker.comment(stim_comments.pop()) # pair 1 on
                     point_1.draw()
                     point_2.draw()
-                if .7 <= trial_clock.getTime() < .8:
-                    if len(stim_comments) == 3:
-                        tracker.comment(stim_comments.pop()) # pair 1 off
+                # if .7 <= trial_clock.getTime() < .8:
+                    # if len(stim_comments) == 3:
+                    #     tracker.comment(stim_comments.pop()) # pair 1 off
                 if .8 <= trial_clock.getTime() < 1.4:
-                    if len(stim_comments) == 2:
-                        tracker.comment(stim_comments.pop()) # pair 2 on
+                    # if len(stim_comments) == 2:
+                    #     tracker.comment(stim_comments.pop()) # pair 2 on
                     point_3.draw()
                     point_4.draw()
 
@@ -461,83 +463,16 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
                 k = event.getKeys(['q']) # quit / abort during trial
                 if k and 'q' in k:
                     abort = True
-                    tracker.comment('trial aborted') # task aborted?
+                    # tracker.comment('trial aborted') # task aborted?
                     break
                 
                 event.clearEvents(eventType='keyboard') # just to be sure?
 
-        if len(stim_comments) == 1:
-            tracker.comment(stim_comments.pop()) # pair 2 off
-        
-
-        # # # # # # # # # # # 
-        # #
-        # # variable break
-        # #
-        # # # # # # # # # # # 
-
-        # # fixation.ori += 45
-        # # fixation.color = 'black'
-        # hiFusion.draw()
-        # loFusion.draw()
-        # blindspot.draw()
-        # fixation_x.draw()
-        # win.flip()
-
-        # k = ['wait']
-        # while k[0] not in ['q', 'up', 'num_up']: # allow recalibration here?
-        #     k = event.waitKeys()
-        # if k[0] in ['q']:
-        #     abort = True
-        #     break
-        #     #! empty buffer?
-
-
-
-        # tracker.waitForFixation()
-
-        # if not gaze_out:
-        #     ## trial
-            
-        #     trial_clock.reset()
-        #     gaze_in_region = True
-        
-        #     while trial_clock.getTime() <= 0.9 and not abort:
-        #         t = trial_clock.getTime()
-                
-        #         #!!# get position at each t
-        #         #!!# if position is invalid or >2 dva, set gaze in region to False
-        #         #!!# may also record gazes in file here and do stuff like showing gaze position if simulating with mouse
-                
-        #         if not tracker.gazeInFixationWindow():
-        #             gaze_out = True
-        #             tracker.comment('trial aborted')
-        #             break
-
-        #         fixation.draw()
-        #         blindspot.draw()
-        #         hiFusion.draw()
-        #         loFusion.draw()
-
-        #         if .1 <= trial_clock.getTime() < .65:
-        #             if len(stim_comments) == 2:
-        #                 tracker.comment(stim_comments.pop()) # pair 2 on
-        #             point_3.draw()
-        #             point_4.draw()
-        
-        #         blindspot.draw()
-        #         win.flip()
-                
-        #         k = event.getKeys(['q']) # shouldn't this be space? like after the stimulus? this is confusing...
-        #         if k and 'q' in k:
-        #             abort = True
-        #             tracker.comment('trial aborted') # task aborted?
-        #             break
-                
-        #         event.clearEvents(eventType='keyboard') # just to be sure?
-
         # if len(stim_comments) == 1:
         #     tracker.comment(stim_comments.pop()) # pair 2 off
+        
+
+      
 
         if abort:
             break
@@ -560,7 +495,7 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
 
             if k[0] in ['q']:
                 abort = True
-                tracker.comment('trial aborted') # this could be more like: "task aborted"?
+                # tracker.comment('trial aborted') # this could be more like: "task aborted"?
                 break
                 #! empty buffer?
             elif k[0] in ['space', 'num_insert']:
@@ -569,11 +504,11 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
                 resp = 'abort'
                 targ_chosen = 'abort'
                 reversal = 'abort'
-                tracker.comment('trial aborted')
+                # tracker.comment('trial aborted')
                 #! empty buffer?
             else:
                 resp = 1 if k[0] in ['left', 'num_left'] else 2
-                tracker.comment('response')
+                # tracker.comment('response')
                 #! empty buffer?
 
             event.clearEvents(eventType='keyboard') # just to be sure?
@@ -600,7 +535,7 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
                     
                 #!!# calibrate
                 #### tracker.stopcollecting() # do we even have to stop/start collecting?
-                tracker.calibrate()
+                # tracker.calibrate()
                 #### tracker.startcollecting()
                 recalibrate = False
 
@@ -644,7 +579,7 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
 
                     #!!# calibrate
                     #### tracker.stopcollecting() # do we even have to stop/start collecting?
-                    tracker.calibrate()
+                    # tracker.calibrate()
                     #### tracker.startcollecting()
 
                     fixation.draw()
@@ -730,7 +665,7 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
             breaktext.draw()
             win.flip()
             
-            tracker.comment('break')
+            # tracker.comment('break')
 
             on_break = True
             while on_break:
@@ -743,7 +678,7 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
             event.clearEvents(eventType='keyboard') # just to be sure?
 
 
-            tracker.calibrate()
+            # tracker.calibrate()
             break_trial = 1
 
         event.clearEvents(eventType='keyboard') # just to be more sure?
@@ -753,12 +688,12 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
         respFile = open(respFileName,'a')
         respFile.write("Run manually ended at " + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M") + "!")
         respFile.close()
-        tracker.comment('run aborted')
+        # tracker.comment('run aborted')
         # stop collecting?
         # close file?
         # shutdown eye-tracker?
     elif not any(stairs_ongoing):
-        tracker.comment('run finished')
+        # tracker.comment('run finished')
         print('run ended properly!')
 
     print(datetime.datetime.now().strftime("%Y-%m-%d-%H-%M"))
@@ -766,9 +701,9 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
 
     #!!# stop recording
 
-    tracker.stopcollecting()
-    tracker.closefile()
-    tracker.shutdown()
+    # tracker.stopcollecting()
+    # tracker.closefile()
+    # tracker.shutdown()
 
 
     ## last screen
