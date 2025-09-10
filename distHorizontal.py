@@ -367,12 +367,12 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
         if which_first == 'Targ':
             point_1.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
             point_2.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
-            point_3.pos = (positions[pos[1]][0]             + shift[0] -(tar/2)*dir, positions[pos[1]][1])
+            point_3.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
             point_4.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
         else:
             point_3.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
             point_4.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
-            point_1.pos = (positions[pos[1]][0]             + shift[0] -(tar/2)*dir, positions[pos[1]][1])
+            point_1.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
             point_2.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
 
         if eye[which_stair] == hemifield:
