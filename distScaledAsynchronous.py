@@ -215,8 +215,8 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     ang_up_right = right_prop['ang_up']
     tar_right    = right_prop['tar']
 
-    left_scale = (spot_left[1]  - tar_left/2 - 1)  / (spot_left[1]  + tar_left/2)
-    right_scale = (spot_right[1] - tar_right/2 - 1) / (spot_right[1] + tar_right/2)
+    left_scale = (spot_left[1]  - tar_left/2)  / (spot_left[1]  + tar_left/2)
+    right_scale = (spot_right[1] - tar_right/2) / (spot_right[1] + tar_right/2)
 
 
     ## prepare trials
@@ -385,13 +385,19 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
         if which_first == 'Targ':
             point_1.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
             point_2.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
-            point_3.pos = (positions[pos[1]][0]             + shift[0] -(tar/2)*dir, positions[pos[1]][1])
+            point_3.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
             point_4.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
         else:
             point_3.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
             point_4.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
-            point_1.pos = (positions[pos[1]][0]             + shift[0] -(tar/2)*dir, positions[pos[1]][1])
+            point_1.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
             point_2.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
+
+
+        # distPair1 = ((point_1.pos[0]-point_2.pos[0])**2 + (point_1.pos[1]-point_2.pos[1])**2)**0.5
+        # distPair2 = ((point_3.pos[0]-point_4.pos[0])**2 + (point_3.pos[1]-point_4.pos[1])**2)**0.5
+
+        # print(distPair1 - distPair2)
 
         if eye[which_stair] == hemifield:
             point_1.fillColor = col_ipsi
