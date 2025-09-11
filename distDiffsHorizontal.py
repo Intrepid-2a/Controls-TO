@@ -18,7 +18,8 @@ Authors: Clement Abbatecola, Belén María Montabes de la Cruz
 
 # import psychopy
 # from psychopy import core, visual, gui, data, event
-# from psychopy.tools.coordinatetools import pol2cart, cart2pol
+from psychopy.tools.coordinatetools import pol2cart, cart2pol
+from mypsycho import *
 import numpy as np
 import random, datetime, os
 from glob import glob
@@ -86,7 +87,11 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
     for respFileName in participantfiles:
 
         responses = pd.read_table(respFileName, skiprows=1)    
-
+        
+        # we use the response file that has as many trials in it
+        # as the eyetracking data used to find the calibrations
+        # a bit of a hack... but for the current data it works
+        # that doesn't necessarily apply to other data sets !!!
         if responses.shape[0] == runtrials:
             break
 
@@ -123,15 +128,19 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 
 #     # print(colors)
 
-#     hiFusion = setup['fusion']['hi']
-#     loFusion = setup['fusion']['lo']
+    # we need the fusion stimuli since they use the RNG:
 
-#     blindspot = setup['blindspotmarkers'][hemifield]
+    hiFusion = setup['fusion']['hi']
+    loFusion = setup['fusion']['lo']
+
+    blindspot = setup['blindspotmarkers'][hemifield]
 #     # print(blindspot.fillColor)
     
 #     fixation = setup['fixation']
 
-#     tracker = setup['tracker']
+    # we need the eye tracker object, since it uses the RNG:
+
+    tracker = setup['tracker']
     
 
 
@@ -164,16 +173,17 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 #     # blindspot.size = spot_size
 #     # blindspot.autoDraw = True 
 
-#     left_prop  = setup['blindspotmarkers']['left_prop']
-#     right_prop = setup['blindspotmarkers']['right_prop']
+    left_prop  = setup['blindspotmarkers']['left_prop']
+    right_prop = setup['blindspotmarkers']['right_prop']
 
-#     spot_left    = left_prop['spot']
-#     ang_up_left  = left_prop['ang_up']
-#     tar_left     = left_prop['tar']
+    spot_left    = left_prop['spot']
+    # print(spot_left)
+    ang_up_left  = left_prop['ang_up']
+    tar_left     = left_prop['tar']
 
-#     spot_right   = right_prop['spot']
-#     ang_up_right = right_prop['ang_up']
-#     tar_right    = right_prop['tar']
+    spot_right   = right_prop['spot']
+    ang_up_right = right_prop['ang_up']
+    tar_right    = right_prop['tar']
 
 #     ## prepare trials
 #     # these are in polar coordinates, for both an inner and outer dot position:
@@ -185,34 +195,34 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 #     #     "righ-mid": [(spot_right[0] +           00, spot_right[1] - tar_right/2), (spot_right[0] +           00, spot_right[1] + tar_right/2)],
 #     #     "righ-bot": [(spot_right[0] - ang_up_right, spot_right[1] - tar_right/2), (spot_right[0] - ang_up_right, spot_right[1] + tar_right/2)],
 #     # }
-#     # we want cartesian for this variant:
-#     positions = {
-#         "left-top": pol2cart(spot_left[0]  - ang_up_left,  spot_left[1] ),
-#         "left-mid": pol2cart(spot_left[0]  +          00,  spot_left[1] ),
-#         "left-bot": pol2cart(spot_left[0]  + ang_up_left,  spot_left[1] ),
-#         "righ-top": pol2cart(spot_right[0] + ang_up_right, spot_right[1]),
-#         "righ-mid": pol2cart(spot_right[0] +           00, spot_right[1]),
-#         "righ-bot": pol2cart(spot_right[0] - ang_up_right, spot_right[1]),
-#     }
+    # we want cartesian for this variant:
+    positions = {
+        "left-top": pol2cart(spot_left[0]  - ang_up_left,  spot_left[1] ),
+        "left-mid": pol2cart(spot_left[0]  +          00,  spot_left[1] ),
+        "left-bot": pol2cart(spot_left[0]  + ang_up_left,  spot_left[1] ),
+        "righ-top": pol2cart(spot_right[0] + ang_up_right, spot_right[1]),
+        "righ-mid": pol2cart(spot_right[0] +           00, spot_right[1]),
+        "righ-bot": pol2cart(spot_right[0] - ang_up_right, spot_right[1]),
+    }
 
-#     if hemifield == 'left':
-#         # First column is target, second column is foil
-#         pos_array = [["left-mid", "left-top"],
-#                      ["left-mid", "left-bot"],
-#                      ["left-top", "left-bot"],
-#                      ["left-bot", "left-top"]]
-#         tar = tar_left
-#         dir = -1
-#     else:
-#         pos_array = [["righ-mid", "righ-top"],
-#                      ["righ-mid", "righ-bot"],
-#                      ["righ-top", "righ-bot"],
-#                      ["righ-bot", "righ-top"]]
-#         tar = tar_right
-#         dir =  1
+    if hemifield == 'left':
+        # First column is target, second column is foil
+        pos_array = [["left-mid", "left-top"],
+                     ["left-mid", "left-bot"],
+                     ["left-top", "left-bot"],
+                     ["left-bot", "left-top"]]
+        tar = tar_left
+        dir = -1
+    else:
+        pos_array = [["righ-mid", "righ-top"],
+                     ["righ-mid", "righ-bot"],
+                     ["righ-top", "righ-bot"],
+                     ["righ-bot", "righ-top"]]
+        tar = tar_right
+        dir =  1
 
-#     pos_array_bsa = pos_array[0:2]
-#     pos_array_out = pos_array[2:4]
+    pos_array_bsa = pos_array[0:2]
+    pos_array_out = pos_array[2:4]
 
 
 #     ######
@@ -243,9 +253,9 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 #     #!!# calibrate
 #     ####tracker.initialize() # this should be done in the central thing... dependent on location: in Toronto we need to override the calibrationTargets
 
-#     tracker.openfile()
-#     tracker.startcollecting()
-#     tracker.calibrate()
+    # tracker.openfile()
+    # tracker.startcollecting()
+    tracker.calibrate()
     
 #     fixation.draw()
 #     win.flip()
@@ -274,24 +284,24 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 
 #     trial_clock = core.Clock()
 
-#     foil_type = [1, -1] * 4
-#     eye = ['left', 'left', 'right', 'right'] * 2
-#     pos_arrays = [pos_array_bsa[:]] * 4 + [pos_array_out[:]] * 4
+    foil_type = [1, -1] * 4
+    eye = ['left', 'left', 'right', 'right'] * 2
+    pos_arrays = [pos_array_bsa[:]] * 4 + [pos_array_out[:]] * 4
 
-#     intervals = [3.5, 3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
-#     position = [[]] * 8
-#     trial_stair = [0] * 8
-#     revs = [0] * 8
-#     direction = [1] * 8
-#     cur_int = [0] * 8
-#     reversal = False
-#     resps = [[True],[False]] * 4
-#     stairs_ongoing = [True] * 8
+    intervals = [3.5, 3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
+    position = [[]] * 8
+    trial_stair = [0] * 8
+    revs = [0] * 8
+    direction = [1] * 8
+    cur_int = [0] * 8
+    reversal = False
+    resps = [[True],[False]] * 4
+    stairs_ongoing = [True] * 8
 
-#     trial = 1
-#     abort = False
-#     recalibrate = False
-#     break_trial = 1
+    trial = 1
+    abort = False
+    recalibrate = False
+    break_trial = 1
 
 #     while any(stairs_ongoing):
 

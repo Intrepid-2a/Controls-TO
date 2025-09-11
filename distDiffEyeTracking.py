@@ -12,6 +12,8 @@ import re
 
 from glob import glob
 
+from mypsycho import *
+
 
 # to test if input objects are valid psychopy classes:
 # import psychopy
@@ -22,7 +24,7 @@ from glob import glob
 # from psychopy import core, event, visual, gui, monitors
 
 # from psychopy.tools import monitorunittools
-# from psychopy.tools.coordinatetools import pol2cart, cart2pol
+from psychopy.tools.coordinatetools import pol2cart, cart2pol
 # from psychopy.hardware import keyboard
 # from pyglet.window import key
 
@@ -1147,10 +1149,12 @@ def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG',
     # for either calibration task, the task should not be set
     # which returns an empty dictionary
     blindspotmarkers = makeBlindSpotMarkers(
-        # win=win, 
+        # win=False, 
         task=task, 
         ID=ID, 
         colors=colors)
+
+    # print(blindspotmarkers)
 
     paths = {} # worst case, we return an empty dictionary?
     if not task == None:
@@ -1169,8 +1173,8 @@ def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG',
              'tracker'          : ET,
              'colors'           : colors,
              'fusion'           : fusion,
-             'fixation'         : fixation,
-             'fixation_x'       : fixation_x,
+             'fixation'         : False,
+             'fixation_x'       : False,
              'blindspotmarkers' : blindspotmarkers,
              'paths'            : paths } )
 
@@ -1252,7 +1256,7 @@ def makeBlindSpotMarkers(task, ID, colors): # used to have 'win' argument
         spot_righ_size = eval(bs_param[3])
         hemifields.append('right')
 
-    print(hemifields)
+    # print(hemifields)
 
     blindspotmarkers = {}
     
@@ -1281,14 +1285,15 @@ def makeBlindSpotMarkers(task, ID, colors): # used to have 'win' argument
                                                 'tar'    : tar,
                                                 'ang_up' : ang_up       }
 
-        print(spot_size)
+        # print(spot_size)
         spot_size = [max(min(1,x),x-1.5) for x in spot_size]
-        print(spot_size)
+        # print(spot_size)
 
         # not creating the actual psychopy stimuli:
         # blindspotmarkers[hemifield] = visual.Circle(win, radius = .5, pos = [7,0], units = 'deg', fillColor=colors[hemifield], lineColor = None, interpolate = True)
-        # blindspotmarkers[hemifield].pos = spot_cart
-        # blindspotmarkers[hemifield].size = spot_size
+        blindspotmarkers[hemifield] = myCircle(win=False, radius = .5, pos = [7,0], units = 'deg', fillColor=colors[hemifield], lineColor = None, interpolate = True)
+        blindspotmarkers[hemifield].pos = spot_cart
+        blindspotmarkers[hemifield].size = spot_size
 
     # print(len(blindspotmarkers))
 
@@ -1321,16 +1326,17 @@ class fusionStim:
         self.nElements = (self.columns*2 + 1) * (self.rows*2 + 1)
 
         self.setColorArray()
-        self.setPositions()
-        self.createElementArray()
+        # self.setPositions()
+        # self.createElementArray()
 
     def setColorArray(self):
         self.colorArray = (self.colors * int(np.ceil(((self.columns*2 + 1) * (self.rows*2 + 1))/len(self.colors))))
         random.shuffle(self.colorArray) # this is the only line that counts...
-        self.colorArray = self.colorArray[:self.nElements]
+        # self.colorArray = self.colorArray[:self.nElements]
 
     def setPositions(self):
-        self.xys = [[(i*self.square)+self.pos[0], (j*self.square)+self.pos[1]] for i in range(-self.columns, self.columns+1) for j in range(-self.rows, self.rows+1)]
+        return
+        # self.xys = [[(i*self.square)+self.pos[0], (j*self.square)+self.pos[1]] for i in range(-self.columns, self.columns+1) for j in range(-self.rows, self.rows+1)]
 
     def createElementArray(self):
         return

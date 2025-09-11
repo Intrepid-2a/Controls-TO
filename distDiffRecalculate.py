@@ -28,5 +28,5 @@ def recalculateDistances():
 
             getHorizontalRunDistanceDifferences(ID=participant, hemifield={'LH':'left', 'RH':'right'}[hemifield], location='toronto', runtrials=ntrials, log=hlog)
 
-            print('done?')
+            print('done?\n')
 
