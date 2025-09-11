@@ -92,7 +92,7 @@ class EyeTracker:
         self.__N_calibrations = 0
         self.__N_rawdatafiles = 0
 
-        self.__createTargetStim()
+        # self.__createTargetStim() # no actual stimuli !
 
 
 
