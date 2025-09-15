@@ -362,7 +362,7 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
             position[which_stair] = pos_arrays[which_stair][:]
         pos = position[which_stair].pop()
 
-        shift = random.sample([-1, -.5, 0, .5, .1], 2)
+        shift = random.sample([-.5, -.25, 0, .25, .5], 2) # used to be [-1, -.5, 0, .5, .1]
         dif = intervals[cur_int[which_stair]] * foil_type[which_stair]
         which_first = random.choice(['Targ', 'Foil'])
 
