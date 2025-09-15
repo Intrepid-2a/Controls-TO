@@ -344,11 +344,9 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
             position[which_stair] = pos_arrays[which_stair][:]
         pos = position[which_stair].pop()
 
-        shift = random.sample([-1, -.5, 0, .5, .1], 2)
+        shift = random.sample([-1, -.5, 0, .5, .1], 2) # THIS IS NOT A GOOD SET... the last value (0.1 should have been 1.0)
         dif = intervals[cur_int[which_stair]] * foil_type[which_stair]
         which_first = random.choice(['Targ', 'Foil'])
-
-
 
 
         # for radially oriented dot pairs:
@@ -367,12 +365,12 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
         if which_first == 'Targ':
             point_1.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
             point_2.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
-            point_3.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
+            point_3.pos = (positions[pos[1]][0]             + shift[0] -(tar/2)*dir, positions[pos[1]][1]) # INCORRECT SHIFT !
             point_4.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
         else:
             point_3.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
             point_4.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
-            point_1.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
+            point_1.pos = (positions[pos[1]][0]             + shift[0] -(tar/2)*dir, positions[pos[1]][1]) # INCORRECT SHIFT !
             point_2.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
 
         if eye[which_stair] == hemifield:
@@ -497,7 +495,7 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
         if abort:
             break
         
-        if not gaze_out: # what is this testing? gaze_out is always False... I think
+        if not gaze_out: # gaze_out is True when people stop fixating during stimulus presentation...
         
             ## response
             fixation.ori += 45
@@ -612,7 +610,7 @@ def doDistHorizontalTask(ID=None, hemifield=None, location=None):
 
                 event.clearEvents(eventType='keyboard') # just to be sure?
                 
-            position[which_stair] = position[which_stair] + [pos]
+            position[which_stair] = position[which_stair] + [pos]     # this happens for ANY type of aborted trial...
             increment = False
             resp = 'auto_abort'
             targ_chosen = 'auto_abort'
