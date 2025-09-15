@@ -10,13 +10,14 @@ def recalculateDistances():
 
     participants = log['ID'].unique()
 
-    for ppno in range(3):
-    # for ppno in range(len(participants)):
+    # for ppno in range(1):
+    for ppno in range(len(participants)):
         participant = participants[ppno]
 
         plog = log[log['ID'] == participant]
 
         for hemifield in ['LH', 'RH']:
+        # for hemifield in ['LH']:
 
             hlog = plog[plog['hemifield'] == hemifield]
 
@@ -24,9 +25,9 @@ def recalculateDistances():
 
             filename = hlog['file'].unique()
 
-            print([participant, hemifield, ntrials])
+            # print([participant, hemifield, ntrials])
 
             getHorizontalRunDistanceDifferences(ID=participant, hemifield={'LH':'left', 'RH':'right'}[hemifield], location='toronto', runtrials=ntrials, log=hlog)
 
-            print('done?\n')
+            # print('done?\n')
 

@@ -74,7 +74,7 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 
     # participantfiles = participantfiles
 
-    
+    recoveredFileName = ID + '_disth_' + ('LH' if hemifield == 'left' else 'RH') + '_1.txt'
 
     participantfiles = [str(x) for x in participantfiles]
 
@@ -95,6 +95,8 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
         if responses.shape[0] == runtrials:
             break
 
+    # print(responses.shape)
+
 
 #     x = 1
 #     et_filename = 'dstH' + ('LH' if hemifield == 'left' else 'RH')
@@ -114,12 +116,12 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 #     # pyg_keyboard = key.KeyStateHandler()
 #     # win.winHandle.push_handlers(pyg_keyboard)
 
-#     colors = setup['colors']
-#     col_both = colors['both']
-#     if hemifield == 'left':
-#         col_ipsi, col_contra = colors['left'], colors['right']
-#     if hemifield == 'right':
-#         col_contra, col_ipsi = colors['left'], colors['right']
+    colors = setup['colors']
+    col_both = colors['both']
+    if hemifield == 'left':
+        col_ipsi, col_contra = colors['left'], colors['right']
+    if hemifield == 'right':
+        col_contra, col_ipsi = colors['left'], colors['right']
 
 #     # if hemifield == 'left':
 #     #     col_ipsi, col_contra = colors['right'], colors['left']
@@ -163,10 +165,10 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 #     ######
 
 #     ## stimuli
-#     point_1 = visual.Circle(win, radius = .5, pos = pol2cart(00, 3), units = 'deg', fillColor = col_both, lineColor = None)
-#     point_2 = visual.Circle(win, radius = .5, pos = pol2cart(00, 6), units = 'deg', fillColor = col_both, lineColor = None)
-#     point_3 = visual.Circle(win, radius = .5, pos = pol2cart(45, 3), units = 'deg', fillColor = col_both, lineColor = None)
-#     point_4 = visual.Circle(win, radius = .5, pos = pol2cart(45, 6), units = 'deg', fillColor = col_both, lineColor = None)
+    point_1 = myCircle(win, radius = .5, pos = pol2cart(00, 3), units = 'deg', fillColor = col_both, lineColor = None)
+    point_2 = myCircle(win, radius = .5, pos = pol2cart(00, 6), units = 'deg', fillColor = col_both, lineColor = None)
+    point_3 = myCircle(win, radius = .5, pos = pol2cart(45, 3), units = 'deg', fillColor = col_both, lineColor = None)
+    point_4 = myCircle(win, radius = .5, pos = pol2cart(45, 6), units = 'deg', fillColor = col_both, lineColor = None)
 
 #     # blindspot = visual.Circle(win, radius = .5, pos = [7,0], units = 'deg', fillColor=col_ipsi, lineColor = None)
 #     # blindspot.pos = spot_cart
@@ -255,7 +257,7 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 
     # tracker.openfile()
     # tracker.startcollecting()
-    tracker.calibrate()
+    # tracker.calibrate()
     
 #     fixation.draw()
 #     win.flip()
@@ -303,24 +305,54 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
     recalibrate = False
     break_trial = 1
 
+
 #     while any(stairs_ongoing):
 
-#         increment = True
+    stair_previous_resp = [''] * 8
+
+    recovered_distance_differences = [] # here we store the important stuff
+
+
+    for trial_idx in range(responses.shape[0]):
+
+        # print('\n --- ID %s - trial: %d / %d'%(ID, trial_idx+1, runtrials))
+
+        trial_log = dict(log.iloc[trial_idx])
+
+        num_calibrations = trial_log['calibrations']
+
+        # check the number of calibrations done before this trial... a should be in the logs:
+
+        for i in range(num_calibrations):
+            tracker.calibrate()
+
+
+        increment = True # do we need this? yes
 
 #         ## choose staircase
-#         which_stair = random.choice(list(compress([x for x in range(len(stairs_ongoing))], stairs_ongoing)))
+        which_stair = random.choice(list(compress([x for x in range(len(stairs_ongoing))], stairs_ongoing)))
 
 #         ## set trial
-#         if position[which_stair] == []:
-#             random.shuffle(pos_arrays[which_stair])
-#             position[which_stair] = pos_arrays[which_stair][:]
-#         pos = position[which_stair].pop()
+        if position[which_stair] == []:
+            random.shuffle(pos_arrays[which_stair])
+            position[which_stair] = pos_arrays[which_stair][:]
+        pos = position[which_stair].pop()
 
-#         shift = random.sample([-1, -.5, 0, .5, .1], 2)
-#         dif = intervals[cur_int[which_stair]] * foil_type[which_stair]
-#         which_first = random.choice(['Targ', 'Foil'])
+        shift = random.sample([-1, -.5, 0, .5, .1], 2)                       # this is not a GOOD set even...
+        dif = intervals[cur_int[which_stair]] * foil_type[which_stair]
+        which_first = random.choice(['Targ', 'Foil'])
 
+        # print(dif) # never gets updated...
 
+        trial_response = dict(responses.iloc[trial_idx])
+
+        # print('dif: %0.1f vs. Difference: %0.1f'%(dif, trial_response['Difference']))
+        # print(dif - trial_response['Difference'])
+        # print('which_stair: %d vs. Stair: %d'%(which_stair, trial_response['Stair']))
+        # print('current response: %s'%(trial_response['Resp']))
+        # print('previous response: %s'%(stair_previous_resp[trial_response['Stair']]))
+
+        stair_previous_resp[trial_response['Stair']] = trial_response['Resp']
 
 
 #         # for radially oriented dot pairs:
@@ -336,30 +368,45 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 
 
 
-#         if which_first == 'Targ':
-#             point_1.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
-#             point_2.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
-#             point_3.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
-#             point_4.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
-#         else:
-#             point_3.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
-#             point_4.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
-#             point_1.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
-#             point_2.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
+        # if which_first == 'Targ':
+        # target pair points:
+        point_1.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
+        point_2.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
+        # foil pair points:
+        point_3.pos = (positions[pos[1]][0]             + shift[0] -(tar/2)*dir, positions[pos[1]][1])   # SHIFT[0] in used code !!!! ( should have been SHIFT[1] )
+        point_4.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
 
-#         if eye[which_stair] == hemifield:
-#             point_1.fillColor = col_ipsi
-#             point_2.fillColor = col_ipsi
-#             point_3.fillColor = col_ipsi
-#             point_4.fillColor = col_ipsi
-#         else:
-#             point_1.fillColor = col_contra
-#             point_2.fillColor = col_contra
-#             point_3.fillColor = col_contra
-#             point_4.fillColor = col_contra
+
+        targ_dist = ((point_1.pos[0] - point_2.pos[0])**2 + (point_1.pos[1] - point_2.pos[1])**2)**0.5
+        foil_dist = ((point_3.pos[0] - point_4.pos[0])**2 + (point_3.pos[1] - point_4.pos[1])**2)**0.5
+
         
-#         hiFusion.resetProperties()
-#         loFusion.resetProperties()
+        actualDistDiff = foil_dist - targ_dist
+
+        # print('recorded dif: %0.3f vs. recovered dif: %0.3f'%(dif, actualDistDiff))
+
+        recovered_distance_differences.append(round(actualDistDiff,1))
+
+        # else:
+        #     point_3.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
+        #     point_4.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
+        #     point_1.pos = (positions[pos[1]][0]             + shift[0] -(tar/2)*dir, positions[pos[1]][1])
+        #     point_2.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
+
+        # if eye[which_stair] == hemifield:
+        #     point_1.fillColor = col_ipsi
+        #     point_2.fillColor = col_ipsi
+        #     point_3.fillColor = col_ipsi
+        #     point_4.fillColor = col_ipsi
+        # else:
+        #     point_1.fillColor = col_contra
+        #     point_2.fillColor = col_contra
+        #     point_3.fillColor = col_contra
+        #     point_4.fillColor = col_contra
+        
+        # done AFTER the shift has been selected?
+        hiFusion.resetProperties() # uses the random shuffle function
+        loFusion.resetProperties() # so the RNG is kept in the same state 
 
 #         ## pre trial fixation
 #         tracker.waitForFixation()
@@ -503,11 +550,43 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 #                 tracker.comment('response')
 #                 #! empty buffer?
 
+        
+        # print(trial_response)
+        resp = trial_response['Resp']
+        abort = False
+        # increment = True
+        k = []
+        if resp in ['abort','auto_abort']:
+            abort = True
+            increment = False
+            position[which_stair] = position[which_stair] + [pos]
+        else:
+            k = {'1':['left'], '2':['right']}[resp]
+            resp = int(resp)
+        
+        if dif != trial_response['Difference']:
+            # print(dif - trial_response['Difference'])
+            print('dif: %0.1f vs. Difference: %0.1f'%(dif, trial_response['Difference']))
+            print('DIFF ERROR !!!')
+            # print(trial_response)
+            break
+
+        if which_stair != trial_response['Stair']:
+            print('which_stair: %d vs. Stair: %d'%(which_stair, trial_response['Stair']))
+            print('STAIR ERROR !!!')
+            break
+
+        
+                
+        
+        
+
+        # print(resp)
 #             event.clearEvents(eventType='keyboard') # just to be sure?
                 
 #             fixation.ori -= 45
             
-#         else:
+        # else:
         
 #             ## dealing with auto-aborted trials
         
@@ -584,13 +663,16 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 
 #                 event.clearEvents(eventType='keyboard') # just to be sure?
                 
-#             position[which_stair] = position[which_stair] + [pos]
+            # position[which_stair] = position[which_stair] + [pos]
 #             increment = False
 #             resp = 'auto_abort'
 #             targ_chosen = 'auto_abort'
 #             reversal = 'auto_abort'
+
+        # print('k: %r'%(k))
+        # print('increment: %r'%(increment))
         
-#         if increment:
+        if increment:
 #             '''
 #             which_first == 'Targ'          => was target first? (True/False)
 #             dif > 0                        => was target smaller? (True/False)
@@ -601,20 +683,21 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 #             (which_first == 'Targ') == (k[0] == 'left') => was target chosen?
 #             '''
             
-#             targ_chosen = (which_first == 'Targ') == (k[0] == 'left')
+            targ_chosen = (which_first == 'Targ') == (k[0] == 'left')
+            # print(targ_chosen)
 
-#             ## update staircase (which direction, is there a reversal?)
-#             reversal = False
-#             resps[which_stair] = resps[which_stair] + [targ_chosen]
-#             if  resps[which_stair][-2] != resps[which_stair][-1]:
-#                 reversal = True
-#                 direction[which_stair] *= -1
-#                 revs[which_stair] += len(resps[which_stair]) > 2
+            ## update staircase (which direction, is there a reversal?)
+            reversal = False
+            resps[which_stair] = resps[which_stair] + [targ_chosen]
+            if  resps[which_stair][-2] != resps[which_stair][-1]:
+                reversal = True
+                direction[which_stair] *= -1
+                revs[which_stair] += len(resps[which_stair]) > 2
                 
-#             ## increment/update
-#             cur_int[which_stair] = max(min(cur_int[which_stair] + direction[which_stair], len(intervals) - 1), 0)
-#             trial_stair[which_stair] = trial_stair[which_stair] + 1
-#             stairs_ongoing[which_stair] = revs[which_stair] <= nRevs or trial_stair[which_stair] < nTrials
+            ## increment/update
+            cur_int[which_stair] = max(min(cur_int[which_stair] + direction[which_stair], len(intervals) - 1), 0)
+            trial_stair[which_stair] = trial_stair[which_stair] + 1
+            stairs_ongoing[which_stair] = revs[which_stair] <= nRevs or trial_stair[which_stair] < nTrials
 
 #         ## print trial
 #         print(resp,
@@ -705,6 +788,16 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 
 #     #!!# close eye-tracker (eye-tracker object requires the window object - which should also be closed... but only after this last message)
 #     win.close()
+    responses['recoveredDiffs'] = recovered_distance_differences
+    # print(respFileName)
+
+    rec_path = '../data/recDistHorizontal/'
+    recoveredFileName
+
+    responses.to_csv(rec_path + recoveredFileName,
+                    index=False)
+    # responses = pd.read_table(respFileName, skiprows=1)    
+
 
 
 # if __name__ == "__main__":

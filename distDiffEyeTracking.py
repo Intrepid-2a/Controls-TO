@@ -998,7 +998,6 @@ def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG',
                        task=task, 
                        ID=ID)
 
-
     # WINDOW OBJECT
 
     if location == 'glasgow':
