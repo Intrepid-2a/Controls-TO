@@ -150,6 +150,13 @@ def collectParticipantInfo():
                 'left'        : False,
                 'right'       : False
             },
+        'distScaledAsynchronous' :
+            {
+                'color'       : False,
+                'mapping'     : False,
+                'left'        : False,
+                'right'       : False
+            },
         'distBinocular' :
             {
                 'color'       : False,
@@ -207,7 +214,7 @@ def getParticipantTaskInfo(ID):
 
     info = {}
 
-    for task in ['distance', 'distHorizontal', 'distScaled', 'distUpturned', 'distBinocular', 'distAsynchronous']:
+    for task in ['distance', 'distHorizontal', 'distScaled', 'distUpturned', 'distBinocular', 'distAsynchronous', 'distScaledAsynchronous']:
         info[task] = {}
         subtasks = ['color','mapping','RH','LH']
         if task == 'distBinocular':
@@ -238,7 +245,8 @@ def getGeneralDataInfo():
              'distBinocular',
              'distScaled',
              'distUpturned',
-             'distAsynchronous']
+             'distAsynchronous',
+             'distScaledAsynchronous']
     subtasks = ['',
                 'color',
                 'mapping']
@@ -251,7 +259,8 @@ def getGeneralDataInfo():
                         'distBinocular':[],
                         'distScaled':[],
                         'distUpturned':[],
-                        'distAsynchronous':[]}
+                        'distAsynchronous':[],
+                        'distScaledAsynchronous':[]}
 
 
     for task in tasks:
@@ -279,6 +288,8 @@ def getGeneralDataInfo():
                 basename = os.path.join('..', 'data', task, ID + '_distt')
             elif task == 'distAsynchronous':
                 basename = os.path.join('..', 'data', task, ID + '_dista')
+            elif task == 'distScaledAsynchronous':
+                basename = os.path.join('..', 'data', task, ID + '_distsa')
             else:
                 basename = os.path.join('..', 'data', task, ID + '_' + task)
 
@@ -309,7 +320,7 @@ def getGeneralDataInfo():
                     taskParticipants[task] += [ID]
 
     # taskParticipants['all'] = list(set(taskParticipants['area']).intersection(set(taskParticipants['curvature'])).intersection(set(taskParticipants['distance'])).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distBinocular'])))
-    taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distUpturned'])).intersection(set(taskParticipants['distAsynchronous'])))
+    taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distUpturned'])).intersection(set(taskParticipants['distAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronous'])))
 
     bytask = { 
             #    'area':           taskParticipants['area'], 
@@ -319,7 +330,8 @@ def getGeneralDataInfo():
                'distBinocular':  taskParticipants['distBinocular'],
                'distScaled'   :  taskParticipants['distScaled'],
                'distUpturned' :  taskParticipants['distUpturned'], 
-               'distAsynchronous' : taskParticipants['distAsynchronous']}
+               'distAsynchronous' : taskParticipants['distAsynchronous'],
+               'distScaledAsynchronous' : taskParticipants['distScaledAsynchronous']}
 
     for key in taskParticipants.keys():
         taskParticipants[key] = len(taskParticipants[key])

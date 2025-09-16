@@ -15,6 +15,7 @@ from distHorizontal import *
 from distBinocular import *
 from distUpturned import *
 from distAsynchronous import *
+from distScaledAsynchronous import *
 
 # is this still used?
 from distScaled import *
@@ -84,6 +85,13 @@ class MyFrame(wx.Frame):
         self.asynchronous_left = wx.Button(self, -1, "left")
         self.asynchronous_right = wx.Button(self, -1, "right")
 
+        self.scaledasynch_count = wx.StaticText(self, -1, "#")
+        self.scaledasynch_text = wx.StaticText(self, -1, "Scaled Asynch:")
+        self.scaledasynch_color = wx.Button(self, -1, "color")
+        self.scaledasynch_mapping = wx.Button(self, -1, "mapping")
+        self.scaledasynch_left = wx.Button(self, -1, "left")
+        self.scaledasynch_right = wx.Button(self, -1, "right")
+
         self.binocular_count = wx.StaticText(self, -1, "#")
         self.binocular_text = wx.StaticText(self, -1, "Binocular:")
         self.binocular_color = wx.Button(self, -1, "color")
@@ -133,6 +141,11 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.runTask, self.asynchronous_left)
         self.Bind(wx.EVT_BUTTON, self.runTask, self.asynchronous_right)
 
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.scaledasynch_color)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.scaledasynch_mapping)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.scaledasynch_left)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.scaledasynch_right)
+
         # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_color)
         # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_mapping)
         # self.Bind(wx.EVT_BUTTON, self.runTask, self.curve_left)
@@ -179,7 +192,7 @@ class MyFrame(wx.Frame):
         # location thing is 1 item, no grid needed...
         participant_grid = wx.GridSizer(2, 4, 0, 0)
 
-        taskrun_grid     = wx.GridSizer(5, 6, 0, 0) # 5 tasks, 6 elements per task
+        taskrun_grid     = wx.GridSizer(6, 6, 0, 0) # 6 tasks, 6 elements per task
 
         # control_grid     = wx.GridSizer(1, 6, 0, 0)
 
@@ -231,6 +244,13 @@ class MyFrame(wx.Frame):
         taskrun_grid.Add(self.asynchronous_left, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.asynchronous_right, -1, wx.ALIGN_LEFT, 0)        
 
+        taskrun_grid.Add(self.scaledasynch_count, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.scaledasynch_text, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.scaledasynch_color, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.scaledasynch_mapping, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.scaledasynch_left, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.scaledasynch_right, -1, wx.ALIGN_LEFT, 0)        
+
         taskrun_grid.Add(self.binocular_count, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.binocular_text, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.binocular_color, -1, wx.ALIGN_LEFT, 0)
@@ -263,6 +283,7 @@ class MyFrame(wx.Frame):
         self.upturned_count.SetLabel( '%d (%d)'%(counts['distUpturned'], counts['all']) )
         self.binocular_count.SetLabel( '%d (%d)'%(counts['distBinocular'], counts['all']) )
         self.asynchronous_count.SetLabel( '%d (%d)'%(counts['distAsynchronous'], counts['all']) )
+        self.scaledasynch_count.SetLabel( '%d (%d)'%(counts['distScaledAsynchronous'], counts['all']) )
         # self.dist_count.SetLabel( '%d (%d)'%(counts['distance'], counts['all']) )
 
     def pickExisting(self, event):
@@ -330,6 +351,16 @@ class MyFrame(wx.Frame):
             self.asynchronous_left.Enable()
             self.asynchronous_right.Enable()
 
+        self.scaledasynch_color.Enable()
+        self.scaledasynch_mapping.Disable()
+        if info['distScaledAsynchronous']['color']:
+            self.scaledasynch_mapping.Enable()
+        self.scaledasynch_left.Disable()
+        self.scaledasynch_right.Disable()
+        if info['distScaledAsynchronous']['mapping']:
+            self.scaledasynch_left.Enable()
+            self.scaledasynch_right.Enable()
+
         self.binocular_color.Enable()
         self.binocular_mapping.Disable()
         if info['distBinocular']['color']:
@@ -363,15 +394,17 @@ class MyFrame(wx.Frame):
             offset = [0,-10]
         if buttonId in [self.asynchronous_color.Id, self.asynchronous_mapping.Id, self.asynchronous_left.Id, self.asynchronous_right.Id]:
             task = 'distAsynchronous'
+        if buttonId in [self.scaledasynch_color.Id, self.scaledasynch_mapping.Id, self.scaledasynch_left.Id, self.scaledasynch_right.Id]:
+            task = 'distScaledAsynchronous'
 
 
-        if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.upturned_color.Id, self.asynchronous_color.Id, self.binocular_color.Id]:
+        if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.upturned_color.Id, self.asynchronous_color.Id, self.scaledasynch_color.Id, self.binocular_color.Id]:
             subtask = 'color'
-        if buttonId in [self.horizontal_mapping.Id, self.scaled_mapping.Id, self.upturned_mapping.Id, self.asynchronous_mapping.Id, self.binocular_mapping.Id]:
+        if buttonId in [self.horizontal_mapping.Id, self.scaled_mapping.Id, self.upturned_mapping.Id, self.asynchronous_mapping.Id, self.scaledasynch_mapping.Id, self.binocular_mapping.Id]:
             subtask = 'mapping'
-        if buttonId in [self.horizontal_left.Id, self.scaled_left.Id, self.upturned_left.Id, self.asynchronous_left.Id]:
+        if buttonId in [self.horizontal_left.Id, self.scaled_left.Id, self.upturned_left.Id, self.asynchronous_left.Id, self.scaledasynch_left.Id]:
             subtask = 'left'
-        if buttonId in [self.horizontal_right.Id, self.scaled_right.Id, self.upturned_right.Id, self.asynchronous_right.Id]:
+        if buttonId in [self.horizontal_right.Id, self.scaled_right.Id, self.upturned_right.Id, self.asynchronous_right.Id, self.scaledasynch_right.Id]:
             subtask = 'right'
         if buttonId in [self.binocular_task.Id]:
             subtask = 'run'
@@ -414,6 +447,11 @@ class MyFrame(wx.Frame):
         if task == 'distAsynchronous':
             # print('do distance task')
             doDistAsynchronousTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
+            return
+
+        if task == 'distScaledAsynchronous':
+            # print('do distance task')
+            doDistScaledAsynchronousTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
             return
 
         if task == 'distBinocular':
