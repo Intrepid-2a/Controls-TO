@@ -100,7 +100,7 @@ def doColorCalibration(ID=None, task=None, location=None):
     # print(cfg['hw']['win'].color)
 
 
-    cfg['hw']['win'].viewPos = [0,-8]
+    cfg['hw']['win'].viewPos = [0,0]
 
 
     # add pyglet keyboard stuff:
