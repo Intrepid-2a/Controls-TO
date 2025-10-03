@@ -214,11 +214,11 @@ def getParticipantTaskInfo(ID):
 
     info = {}
 
-    for task in ['distance', 'distHorizontal', 'distScaled', 'distUpturned', 'distBinocular', 'distAsynchronous', 'distScaledAsynchronous']:
+    for task in ['distance', 'distHorizontal', 'distScaled', 'distUpturned', 'distBinocular', 'distAsynchronous', 'distScaledAsynchronous', 'distScaledAsynchronousOFS']:
         info[task] = {}
         subtasks = ['color','mapping','RH','LH']
-        if task == 'distBinocular':
-            subtasks = ['color','mapping','run']
+        # if task == 'distBinocular':
+        #     subtasks = ['color','mapping','run']
         for subtask in subtasks:
 
             if subtask in ['color', 'mapping']:
@@ -242,11 +242,12 @@ def getGeneralDataInfo():
     #          'curvature']
     tasks = ['distance',
              'distHorizontal',
-             'distBinocular',
+            #  'distBinocular',
              'distScaled',
-             'distUpturned',
+            #  'distUpturned',
              'distAsynchronous',
-             'distScaledAsynchronous']
+             'distScaledAsynchronous',
+             'distScaledAsynchronousOFS']
     subtasks = ['',
                 'color',
                 'mapping']
@@ -256,11 +257,12 @@ def getGeneralDataInfo():
                         # 'area':[],
                         # 'curvature':[],
                         'distHorizontal':[],
-                        'distBinocular':[],
+                        # 'distBinocular':[],
                         'distScaled':[],
-                        'distUpturned':[],
+                        # 'distUpturned':[],
                         'distAsynchronous':[],
-                        'distScaledAsynchronous':[]}
+                        'distScaledAsynchronous':[],
+                        'distScaledAsynchronousOFS':[]}
 
 
     for task in tasks:
@@ -282,56 +284,60 @@ def getGeneralDataInfo():
                 basename = os.path.join('..', 'data', task, ID + '_disth')
             elif task == 'distScaled':
                 basename = os.path.join('..', 'data', task, ID + '_dists')
-            elif task == 'distBinocular':
-                basename = os.path.join('..', 'data', task, ID + '_distb')
-            elif task == 'distUpturned':
-                basename = os.path.join('..', 'data', task, ID + '_distt')
+            # elif task == 'distBinocular':
+            #     basename = os.path.join('..', 'data', task, ID + '_distb')
+            # elif task == 'distUpturned':
+            #     basename = os.path.join('..', 'data', task, ID + '_distt')
             elif task == 'distAsynchronous':
                 basename = os.path.join('..', 'data', task, ID + '_dista')
             elif task == 'distScaledAsynchronous':
                 basename = os.path.join('..', 'data', task, ID + '_distsa')
+            elif task == 'distScaledAsynchronousOFS':
+                basename = os.path.join('..', 'data', task, ID + '_distsao')
             else:
                 basename = os.path.join('..', 'data', task, ID + '_' + task)
 
-            if task == 'distBinocular':
-                done = glob.glob(basename + '_run_*.txt')
-                if len(done):
-                    taskParticipants[task] += [ID]
+            # if task == 'distBinocular':
+            #     done = glob.glob(basename + '_run_*.txt')
+            #     if len(done):
+            #         taskParticipants[task] += [ID]
+            # else:
 
-            else:
-                # are there any left hand files?
-                left_done = False
-                left  = glob.glob(basename + '_LH_*.txt')
-                if len(left):
-                    left_done = True
+            # are there any left hand files?
+            left_done = False
+            left  = glob.glob(basename + '_LH_*.txt')
+            if len(left):
+                left_done = True
 
-                right_done = False
-                right = glob.glob(basename + '_RH_*.txt')
-                if len(right):
-                    right_done = True
-                
-                # NOT CHECKED:
-                #
-                # - calibration (color & blindspot mapping)
-                # - completeness of behavioral files
-                # - informed consent / demographics
+            right_done = False
+            right = glob.glob(basename + '_RH_*.txt')
+            if len(right):
+                right_done = True
+            
+            # NOT CHECKED:
+            #
+            # - calibration (color & blindspot mapping)
+            # - completeness of behavioral files
+            # - informed consent / demographics
 
-                if all([right_done, left_done]):
-                    taskParticipants[task] += [ID]
+            if all([right_done, left_done]):
+                taskParticipants[task] += [ID]
 
     # taskParticipants['all'] = list(set(taskParticipants['area']).intersection(set(taskParticipants['curvature'])).intersection(set(taskParticipants['distance'])).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distBinocular'])))
-    taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distUpturned'])).intersection(set(taskParticipants['distAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronous'])))
+    # taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distUpturned'])).intersection(set(taskParticipants['distAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronous'])))
+    taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronousOFS'])))
 
     bytask = { 
             #    'area':           taskParticipants['area'], 
             #    'curvature':      taskParticipants['curvature'], 
                'distance':       taskParticipants['distance'],
                'distHorizontal': taskParticipants['distHorizontal'],
-               'distBinocular':  taskParticipants['distBinocular'],
+            #    'distBinocular':  taskParticipants['distBinocular'],
                'distScaled'   :  taskParticipants['distScaled'],
-               'distUpturned' :  taskParticipants['distUpturned'], 
+            #    'distUpturned' :  taskParticipants['distUpturned'], 
                'distAsynchronous' : taskParticipants['distAsynchronous'],
-               'distScaledAsynchronous' : taskParticipants['distScaledAsynchronous']}
+               'distScaledAsynchronous' : taskParticipants['distScaledAsynchronous'],
+               'distScaledAsynchronousOFS' : taskParticipants['distScaledAsynchronousOFS']}
 
     for key in taskParticipants.keys():
         taskParticipants[key] = len(taskParticipants[key])

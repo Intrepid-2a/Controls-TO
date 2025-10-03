@@ -427,7 +427,7 @@ class MyFrame(wx.Frame):
             task = 'distAsynchronous'
         if buttonId in [self.scaledasynch_color.Id, self.scaledasynch_mapping.Id, self.scaledasynch_left.Id, self.scaledasynch_right.Id]:
             task = 'distScaledAsynchronous'
-         if buttonId in [self.scasynchofs_color.Id, self.scasynchofs_mapping.Id, self.scasynchofs_left.Id, self.scasynchofs_right.Id]:
+        if buttonId in [self.scasynchofs_color.Id, self.scasynchofs_mapping.Id, self.scasynchofs_left.Id, self.scasynchofs_right.Id]:
             task = 'distScaledAsynchronousOFS'
 
 
