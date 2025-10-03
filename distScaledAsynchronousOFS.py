@@ -36,7 +36,7 @@ from EyeTracking import localizeSetup, EyeTracker
 #### Initialize experiment
 ######
 
-def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
+def doDistScaledAsynchronousOFSTask(ID=None, hemifield=None, location=None):
 
     ## parameters
     nRevs   = 10   #
@@ -136,7 +136,7 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
         x += 1
 
     # get everything shared from central:
-    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distScaledAsynchronous', ID=ID) # data path is for the mapping data, not the eye-tracker data!
+    setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distScaledAsynchronousOFS', ID=ID) # data path is for the mapping data, not the eye-tracker data!
 
     # setup = localizeSetup(location=location, trackEyes=trackEyes, filefolder=eyetracking_path, filename=et_filename+str(x), task='distScaledAsynchronous', ID=ID, noEyeTracker=True ) # data path is for the mapping data, not the eye-tracker data!
     # print(setup['paths']) # not using yet, just testing
@@ -726,4 +726,4 @@ def doDistScaledAsynchronousTask(ID=None, hemifield=None, location=None):
 
 
 if __name__ == "__main__":
-    doDistScaledAsynchronousTask()
+    doDistScaledAsynchronousOFSTask()
