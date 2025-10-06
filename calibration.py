@@ -343,8 +343,8 @@ def doBlindSpotMapping(ID=None,task=None,location=None,offset=[0,0]):
         print('not toronto?')
         # cfg['hw']['tracker'].initialize()
     
-    cfg['hw']['tracker'].calibrate()
-    cfg['hw']['tracker'].startcollecting()
+    # cfg['hw']['tracker'].calibrate()
+    # cfg['hw']['tracker'].startcollecting()
     
     # print('tracking...')
 
@@ -365,7 +365,7 @@ def doBlindSpotMapping(ID=None,task=None,location=None,offset=[0,0]):
         cfg['hw']['fusion']['hi'].pos =  [cfg['hw']['fusion']['hi'].pos[0], cfg['hw']['fusion']['hi'].pos[1] + (offset[1]/2)]
         cfg['hw']['fusion']['hi'].rows = int(max(1, round(cfg['hw']['fusion']['hi'].rows - (offset[1]/2))))
 
-    
+    cfg['hw']['tracker'].startcollecting()
 
     for hemifield in ['left', 'right']:
 
@@ -378,9 +378,9 @@ def doBlindSpotMapping(ID=None,task=None,location=None,offset=[0,0]):
             # win = visual.Window(resolution, allowGUI=True, monitor=mymonitor, units='deg', viewPos = [0,0], fullscr=True, screen=1)
             point = visual.Circle(cfg['hw']['win'], size = [1,1], pos = [-7,-1], fillColor=colors['left'], lineColor = None, units='deg')
             if task == 'distUpScaledAsynchronous':
-                cfg['hw']['win'].viewPos = [-10,0]
-                cfg['hw']['fusion']['lo'].pos = [-10,-7] # does this even make sense? should just be the old position...
-                cfg['hw']['fusion']['hi'].pos = [-10,7]
+                cfg['hw']['win'].viewPos = [10,0]
+                # cfg['hw']['fusion']['lo'].pos = [-10,-7] # does this even make sense? should just be the old position...
+                # cfg['hw']['fusion']['hi'].pos = [-10,7]
         else:
             colors['ipsi'], colors['contra'] = colors['right'], colors['left']
             filename = ID.lower() + '_RH_blindspot_'
@@ -388,15 +388,18 @@ def doBlindSpotMapping(ID=None,task=None,location=None,offset=[0,0]):
             # win = visual.Window(resolution, allowGUI=True, monitor=mymonitor, units='deg', viewPos = [0,0], fullscr=True, screen=1)
             point = visual.Circle(cfg['hw']['win'], size = [1,1], pos = [7,-1], fillColor=colors['right'], lineColor = None, units='deg')
             if task == 'distUpScaledAsynchronous':
-                cfg['hw']['win'].viewPos = [10,0]
-                cfg['hw']['fusion']['lo'].pos = [10,-7]
-                cfg['hw']['fusion']['hi'].pos = [10,7]
+                cfg['hw']['win'].viewPos = [-10,0]
+                # cfg['hw']['fusion']['lo'].pos = [10,-7]
+                # cfg['hw']['fusion']['hi'].pos = [10,7]
 
         # point.fillColor = [-1,-1,-1]
         # print(point.size)
         
         cfg['hw']['fusion']['hi'].resetProperties()
         cfg['hw']['fusion']['lo'].resetProperties()
+
+        cfg['hw']['tracker'].calibrate()
+        # cfg['hw']['tracker'].startcollecting()
 
 
         # check what the file should be for the participant:
