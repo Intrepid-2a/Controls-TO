@@ -258,7 +258,7 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
         tar = tar_left
         scale = left_scale
         dir = -1
-        cfg['hw']['win'].viewPos = [-10,0]
+        win.viewPos = [10,0]
         # cfg['hw']['fusion']['lo'].pos = [-10,-7] # does this even make sense? should just be the old position...
         # cfg['hw']['fusion']['hi'].pos = [-10,7]
     else:
@@ -269,7 +269,7 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
         tar = tar_right
         scale = right_scale
         dir =  1
-        cfg['hw']['win'].viewPos = [10,0]
+        win.viewPos = [-10,0]
 
     tar = tar * scale
 
