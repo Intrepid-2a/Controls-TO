@@ -241,12 +241,12 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     #     "righ-bot": pol2cart(spot_right[0] - ang_up_right, spot_right[1] * right_scale ),
     # }
     positions = {
-        "left-top": [a+b for a,b in zip(pol2cart(spot_left[0]  - ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
-        "left-mid": [a+b for a,b in zip(pol2cart(spot_left[0]  +          00,  spot_left[1])  , [tar_left+1,0]  )],
-        "left-bot": [a+b for a,b in zip(pol2cart(spot_left[0]  + ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
-        "righ-top": [a-b for a,b in zip(pol2cart(spot_right[0] + ang_up_right, spot_right[1]) , [tar_right+1,0] )],
-        "righ-mid": [a-b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [tar_right+1,0] )],
-        "righ-bot": [a-b for a,b in zip(pol2cart(spot_right[0] - ang_up_right, spot_right[1]) , [tar_right+1,0] )],
+        "left-top": [a-b for a,b in zip(pol2cart(spot_left[0]  - ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
+        "left-mid": [a-b for a,b in zip(pol2cart(spot_left[0]  +          00,  spot_left[1])  , [tar_left+1,0]  )],
+        "left-bot": [a-b for a,b in zip(pol2cart(spot_left[0]  + ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
+        "righ-top": [a+b for a,b in zip(pol2cart(spot_right[0] + ang_up_right, spot_right[1]) , [tar_right+1,0] )],
+        "righ-mid": [a+b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [tar_right+1,0] )],
+        "righ-bot": [a+b for a,b in zip(pol2cart(spot_right[0] - ang_up_right, spot_right[1]) , [tar_right+1,0] )],
     }
 
     if hemifield == 'left':
