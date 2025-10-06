@@ -1543,7 +1543,6 @@ def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG',
 
         tracker = 'eyelink'
 
-
     if location == 'toronto':
         # color calibrated monitor:
         gammaGrid = np.array([ [  0., 135.44739,  2.4203537, np.nan, np.nan, np.nan  ],
@@ -1557,7 +1556,9 @@ def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG',
         screen     = 1  # index on the system: 0 = first monitor, 1 = second monitor, and so on
 
         tracker = 'livetrack'
-
+        # with this, the width of the screen in DVA is:
+        # 2 * (np.arctan(29.4/49.53)/np.pi)*180
+        # = 2 * 30.69 degrees.... 61.385 degrees
 
     mymonitor = monitors.Monitor(name='temp',
                                  distance=distance,
@@ -1655,7 +1656,7 @@ def localizeSetup( trackEyes, filefolder, filename, location=None, glasses='RG',
                                    pos    = [0,-5],
                                    colors = fcols)}
 
-    if task in ['distHorizontal','distBinocular','distance', 'distScaled', 'distAsynchronous', 'distScaledAsynchronous', 'distScaledAsynchronousOFS', 'distScaledAsynchronous']:
+    if task in ['distHorizontal','distBinocular','distance', 'distScaled', 'distAsynchronous', 'distScaledAsynchronous', 'distScaledAsynchronousOFS', 'distUpScaledAsynchronous']:
 
         fusion = {'hi': fusionStim(win    = win,
                                    pos    = [0,7],
