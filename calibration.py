@@ -377,12 +377,20 @@ def doBlindSpotMapping(ID=None,task=None,location=None,offset=[0,0]):
             # win = visual.Window([1920,1080],allowGUI=True, monitor='ccni', units='deg', viewPos = [0,0], fullscr = True)
             # win = visual.Window(resolution, allowGUI=True, monitor=mymonitor, units='deg', viewPos = [0,0], fullscr=True, screen=1)
             point = visual.Circle(cfg['hw']['win'], size = [1,1], pos = [-7,-1], fillColor=colors['left'], lineColor = None, units='deg')
+            if task == 'distUpScaledAsynchronous':
+                cfg['hw']['win'].viewPos = [-10,0]
+                cfg['hw']['fusion']['lo'].pos = [-10,-7] # does this even make sense? should just be the old position...
+                cfg['hw']['fusion']['hi'].pos = [-10,7]
         else:
             colors['ipsi'], colors['contra'] = colors['right'], colors['left']
             filename = ID.lower() + '_RH_blindspot_'
             # win = visual.Window([1920,1080],allowGUI=True, monitor='ccni', units='deg', viewPos = [0,0], fullscr = True)
             # win = visual.Window(resolution, allowGUI=True, monitor=mymonitor, units='deg', viewPos = [0,0], fullscr=True, screen=1)
             point = visual.Circle(cfg['hw']['win'], size = [1,1], pos = [7,-1], fillColor=colors['right'], lineColor = None, units='deg')
+            if task == 'distUpScaledAsynchronous':
+                cfg['hw']['win'].viewPos = [10,0]
+                cfg['hw']['fusion']['lo'].pos = [10,-7]
+                cfg['hw']['fusion']['hi'].pos = [10,7]
 
         # point.fillColor = [-1,-1,-1]
         # print(point.size)
