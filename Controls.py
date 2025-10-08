@@ -88,7 +88,7 @@ class MyFrame(wx.Frame):
         self.asynchronous_right = wx.Button(self, -1, "right")
 
         self.upscasynch_count = wx.StaticText(self, -1, "#")
-        self.upscasynch_text = wx.StaticText(self, -1, "UpScaled Asynch:")
+        self.upscasynch_text = wx.StaticText(self, -1, "UpScal. Asynch:")
         self.upscasynch_color = wx.Button(self, -1, "color")
         self.upscasynch_mapping = wx.Button(self, -1, "mapping")
         self.upscasynch_left = wx.Button(self, -1, "left")

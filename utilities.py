@@ -246,6 +246,7 @@ def getGeneralDataInfo():
              'distScaled',
             #  'distUpturned',
              'distAsynchronous',
+             'distUpScaledAsynchronous',
              'distScaledAsynchronous',
              'distScaledAsynchronousOFS']
     subtasks = ['',
