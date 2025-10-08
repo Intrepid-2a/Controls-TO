@@ -17,6 +17,7 @@ from distHorizontal import *
 from distAsynchronous import *
 from distScaledAsynchronous import *
 from distScaledAsynchronousOFS import *
+from distUpScaledAsynchronous import *
 
 # is this still used?
 from distScaled import *
@@ -86,6 +87,13 @@ class MyFrame(wx.Frame):
         self.asynchronous_left = wx.Button(self, -1, "left")
         self.asynchronous_right = wx.Button(self, -1, "right")
 
+        self.upscasynch_count = wx.StaticText(self, -1, "#")
+        self.upscasynch_text = wx.StaticText(self, -1, "UpScaled Asynch:")
+        self.upscasynch_color = wx.Button(self, -1, "color")
+        self.upscasynch_mapping = wx.Button(self, -1, "mapping")
+        self.upscasynch_left = wx.Button(self, -1, "left")
+        self.upscasynch_right = wx.Button(self, -1, "right")
+
         self.scaledasynch_count = wx.StaticText(self, -1, "#")
         self.scaledasynch_text = wx.StaticText(self, -1, "Scal. Asynch:")
         self.scaledasynch_color = wx.Button(self, -1, "color")
@@ -148,6 +156,11 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.runTask, self.asynchronous_mapping)
         self.Bind(wx.EVT_BUTTON, self.runTask, self.asynchronous_left)
         self.Bind(wx.EVT_BUTTON, self.runTask, self.asynchronous_right)
+
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.upscasynch_color)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.upscasynch_mapping)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.upscasynch_left)
+        self.Bind(wx.EVT_BUTTON, self.runTask, self.upscasynch_right)
 
         self.Bind(wx.EVT_BUTTON, self.runTask, self.scaledasynch_color)
         self.Bind(wx.EVT_BUTTON, self.runTask, self.scaledasynch_mapping)
@@ -257,6 +270,13 @@ class MyFrame(wx.Frame):
         taskrun_grid.Add(self.asynchronous_left, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.asynchronous_right, -1, wx.ALIGN_LEFT, 0)        
 
+        taskrun_grid.Add(self.upscasynch_count, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.upscasynch_text, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.upscasynch_color, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.upscasynch_mapping, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.upscasynch_left, -1, wx.ALIGN_LEFT, 0)
+        taskrun_grid.Add(self.upscasynch_right, -1, wx.ALIGN_LEFT, 0)
+
         taskrun_grid.Add(self.scaledasynch_count, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.scaledasynch_text, -1, wx.ALIGN_LEFT, 0)
         taskrun_grid.Add(self.scaledasynch_color, -1, wx.ALIGN_LEFT, 0)
@@ -303,6 +323,7 @@ class MyFrame(wx.Frame):
         # self.upturned_count.SetLabel( '%d (%d)'%(counts['distUpturned'], counts['all']) )
         # self.binocular_count.SetLabel( '%d (%d)'%(counts['distBinocular'], counts['all']) )
         self.asynchronous_count.SetLabel( '%d (%d)'%(counts['distAsynchronous'], counts['all']) )
+        self.upscasynch_count.SetLabel( '%d (%d)'%(counts['distUpScaledAsynchronous'], counts['all']) )
         self.scaledasynch_count.SetLabel( '%d (%d)'%(counts['distScaledAsynchronous'], counts['all']) )
         self.scasynchofs_count.SetLabel( '%d (%d)'%(counts['distScaledAsynchronousOFS'], counts['all']) )
         # self.dist_count.SetLabel( '%d (%d)'%(counts['distance'], counts['all']) )
@@ -372,6 +393,16 @@ class MyFrame(wx.Frame):
             self.asynchronous_left.Enable()
             self.asynchronous_right.Enable()
 
+        self.upscasynch_color.Enable()
+        self.upscasynch_mapping.Disable()
+        if info['distUpScaledAsynchronous']['color']:
+            self.upscasynch_mapping.Enable()
+        self.upscasynch_left.Disable()
+        self.upscasynch_right.Disable()
+        if info['distUpScaledAsynchronous']['mapping']:
+            self.upscasynch_left.Enable()
+            self.upscasynch_right.Enable()
+
         self.scaledasynch_color.Enable()
         self.scaledasynch_mapping.Disable()
         if info['distScaledAsynchronous']['color']:
@@ -429,19 +460,21 @@ class MyFrame(wx.Frame):
             task = 'distScaledAsynchronous'
         if buttonId in [self.scasynchofs_color.Id, self.scasynchofs_mapping.Id, self.scasynchofs_left.Id, self.scasynchofs_right.Id]:
             task = 'distScaledAsynchronousOFS'
+        if buttonId in [self.upscasynch_color.Id, self.upscasynch_mapping.Id, self.upscasynch_left.Id, self.upscasynch_right.Id]:
+            task = 'distAsynchronous'
 
 
         # if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.upturned_color.Id, self.asynchronous_color.Id, self.scaledasynch_color.Id, self.binocular_color.Id]:
-        if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.asynchronous_color.Id, self.scaledasynch_color.Id, self.scasynchofs_color.Id]:
+        if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.asynchronous_color.Id, self.upscasynch_color.Id, self.scaledasynch_color.Id, self.scasynchofs_color.Id]:
             subtask = 'color'
         # if buttonId in [self.horizontal_mapping.Id, self.scaled_mapping.Id, self.upturned_mapping.Id, self.asynchronous_mapping.Id, self.scaledasynch_mapping.Id, self.binocular_mapping.Id]:
-        if buttonId in [self.horizontal_mapping.Id, self.scaled_mapping.Id, self.asynchronous_mapping.Id, self.scaledasynch_mapping.Id, self.scasynchofs_mapping.Id]:
+        if buttonId in [self.horizontal_mapping.Id, self.scaled_mapping.Id, self.asynchronous_mapping.Id, self.upscasynch_mapping.Id, self.scaledasynch_mapping.Id, self.scasynchofs_mapping.Id]:
             subtask = 'mapping'
         # if buttonId in [self.horizontal_left.Id, self.scaled_left.Id, self.upturned_left.Id, self.asynchronous_left.Id, self.scaledasynch_left.Id]:
-        if buttonId in [self.horizontal_left.Id, self.scaled_left.Id, self.asynchronous_left.Id, self.scaledasynch_left.Id, self.scasynchofs_left.Id]:
+        if buttonId in [self.horizontal_left.Id, self.scaled_left.Id, self.asynchronous_left.Id, self.upscasynch_left.Id, self.scaledasynch_left.Id, self.scasynchofs_left.Id]:
             subtask = 'left'
         # if buttonId in [self.horizontal_right.Id, self.scaled_right.Id, self.upturned_right.Id, self.asynchronous_right.Id, self.scaledasynch_right.Id]:
-        if buttonId in [self.horizontal_right.Id, self.scaled_right.Id, self.asynchronous_right.Id, self.scaledasynch_right.Id, self.scasynchofs_right.Id]:
+        if buttonId in [self.horizontal_right.Id, self.scaled_right.Id, self.asynchronous_right.Id, self.upscasynch_right.Id, self.scaledasynch_right.Id, self.scasynchofs_right.Id]:
             subtask = 'right'
         # if buttonId in [self.binocular_task.Id]:
         #     subtask = 'run'
@@ -484,6 +517,11 @@ class MyFrame(wx.Frame):
         if task == 'distAsynchronous':
             # print('do distance task')
             doDistAsynchronousTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
+            return
+
+        if task == 'distUpScaledAsynchronous':
+            # print('do distance task')
+            doDistUpScaledAsynchronousTask(ID=self.participantID.GetValue(), hemifield=subtask, location=self.location)
             return
 
         if task == 'distScaledAsynchronous':

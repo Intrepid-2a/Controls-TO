@@ -214,7 +214,7 @@ def getParticipantTaskInfo(ID):
 
     info = {}
 
-    for task in ['distance', 'distHorizontal', 'distScaled', 'distUpturned', 'distBinocular', 'distAsynchronous', 'distScaledAsynchronous', 'distScaledAsynchronousOFS']:
+    for task in ['distance', 'distHorizontal', 'distScaled', 'distUpturned', 'distBinocular', 'distAsynchronous', 'distUpScaledAsynchronous', 'distScaledAsynchronous', 'distScaledAsynchronousOFS']:
         info[task] = {}
         subtasks = ['color','mapping','RH','LH']
         # if task == 'distBinocular':
@@ -261,6 +261,7 @@ def getGeneralDataInfo():
                         'distScaled':[],
                         # 'distUpturned':[],
                         'distAsynchronous':[],
+                        'distUpScaledAsynchronous':[],
                         'distScaledAsynchronous':[],
                         'distScaledAsynchronousOFS':[]}
 
@@ -292,6 +293,8 @@ def getGeneralDataInfo():
                 basename = os.path.join('..', 'data', task, ID + '_dista')
             elif task == 'distScaledAsynchronous':
                 basename = os.path.join('..', 'data', task, ID + '_distsa')
+            elif task == 'distUpScaledAsynchronous':
+                basename = os.path.join('..', 'data', task, ID + '_distusa')
             elif task == 'distScaledAsynchronousOFS':
                 basename = os.path.join('..', 'data', task, ID + '_distsao')
             else:
@@ -325,18 +328,19 @@ def getGeneralDataInfo():
 
     # taskParticipants['all'] = list(set(taskParticipants['area']).intersection(set(taskParticipants['curvature'])).intersection(set(taskParticipants['distance'])).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distBinocular'])))
     # taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distUpturned'])).intersection(set(taskParticipants['distAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronous'])))
-    taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronousOFS'])))
+    taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distAsynchronous'])).intersection(set(taskParticipants['distUpScaledAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronousOFS'])))
 
     bytask = { 
-            #    'area':           taskParticipants['area'], 
-            #    'curvature':      taskParticipants['curvature'], 
-               'distance':       taskParticipants['distance'],
-               'distHorizontal': taskParticipants['distHorizontal'],
-            #    'distBinocular':  taskParticipants['distBinocular'],
-               'distScaled'   :  taskParticipants['distScaled'],
-            #    'distUpturned' :  taskParticipants['distUpturned'], 
-               'distAsynchronous' : taskParticipants['distAsynchronous'],
-               'distScaledAsynchronous' : taskParticipants['distScaledAsynchronous'],
+            #    'area'                      :           taskParticipants['area'], 
+            #    'curvature'                 :      taskParticipants['curvature'], 
+               'distance'                  :       taskParticipants['distance'],
+               'distHorizontal'            : taskParticipants['distHorizontal'],
+            #    'distBinocular'             :  taskParticipants['distBinocular'],
+               'distScaled'                :  taskParticipants['distScaled'],
+            #    'distUpturned'              :  taskParticipants['distUpturned'], 
+               'distAsynchronous'          : taskParticipants['distAsynchronous'],
+               'distUpScaledAsynchronous'  : taskParticipants['distUpScaledAsynchronous'],
+               'distScaledAsynchronous'    : taskParticipants['distScaledAsynchronous'],
                'distScaledAsynchronousOFS' : taskParticipants['distScaledAsynchronousOFS']}
 
     for key in taskParticipants.keys():
