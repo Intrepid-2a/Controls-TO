@@ -461,7 +461,7 @@ class MyFrame(wx.Frame):
         if buttonId in [self.scasynchofs_color.Id, self.scasynchofs_mapping.Id, self.scasynchofs_left.Id, self.scasynchofs_right.Id]:
             task = 'distScaledAsynchronousOFS'
         if buttonId in [self.upscasynch_color.Id, self.upscasynch_mapping.Id, self.upscasynch_left.Id, self.upscasynch_right.Id]:
-            task = 'distAsynchronous'
+            task = 'distUpScaledAsynchronous'
 
 
         # if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.upturned_color.Id, self.asynchronous_color.Id, self.scaledasynch_color.Id, self.binocular_color.Id]:
