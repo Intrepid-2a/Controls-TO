@@ -345,9 +345,10 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     eye = ['left', 'left', 'right', 'right'] * 2
     pos_arrays = [pos_array_bsa[:]] * 4 + [pos_array_out[:]] * 4
 
-    intervals = [3.5, 3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
+    # intervals = [3.5, 3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
     # intervals = [3.5,    2.5,    1.5, 1, .5, 0, -.5, -1, -1.5,     -2.5,     -3.5]
     # intervals = [ 1.05, 0.9, 0.75, 0.6, 0.45, 0.3, 0.15, 0.0, -0.15, -0.3, -0.45, -0.6, -0.75, -0.9, -1.05 ]
+    intervals = [4.55, 3.9, 3.25, 2.6, 1.95, 1.3, 0.65, 0.0, -0.65, -1.3, -1.95, -2.6, -3.25, -3.9, -4.55]
 
     position = [[]] * 8
     trial_stair = [0] * 8
