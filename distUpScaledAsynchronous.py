@@ -274,9 +274,9 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
 
 
     # SECOND PROPER attempt, recalculate ang_ups from a moved blind spot marker
-    spot_left_cart_ecc  = [spot_left_cart[0]  - size_left[0]  - 4, spot_left_cart[1]]
+    spot_left_cart_ecc  = [spot_left_cart[0]  - size_left[0]  - 5, spot_left_cart[1]]
     spot_left_ecc       = cart2pol(spot_left_cart_ecc[0],  spot_left_cart_ecc[1])
-    spot_right_cart_ecc = [spot_right_cart[0] + size_right[0] + 4, spot_right_cart[1]]
+    spot_right_cart_ecc = [spot_right_cart[0] + size_right[0] + 5, spot_right_cart[1]]
     spot_right_ecc      = cart2pol(spot_right_cart_ecc[0], spot_right_cart_ecc[1])
     
     left_theta,  left_radius  = spot_left_ecc[0],  spot_left_ecc[1]
