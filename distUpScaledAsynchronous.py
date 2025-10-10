@@ -207,13 +207,17 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     left_prop  = setup['blindspotmarkers']['left_prop']
     right_prop = setup['blindspotmarkers']['right_prop']
 
-    spot_left    = left_prop['spot']
-    ang_up_left  = left_prop['ang_up']
-    tar_left     = left_prop['tar']
+    spot_left       = left_prop['spot']
+    ang_up_left     = left_prop['ang_up']
+    tar_left        = left_prop['tar']
+    spot_left_cart  = left_prop['cart']
+    size_left       = left_prop['size']
 
-    spot_right   = right_prop['spot']
-    ang_up_right = right_prop['ang_up']
-    tar_right    = right_prop['tar']
+    spot_right      = right_prop['spot']       # polar coordinates of centre
+    ang_up_right    = right_prop['ang_up']
+    tar_right       = right_prop['tar']        # target distance
+    spot_right_cart = right_prop['cart']       # cartesian coordinates of centre
+    size_right      = right_prop['size']       # width & height
 
     # left_scale  = (spot_left[1]  - tar_left/2)  / (spot_left[1]  + tar_left/2)
     # right_scale = (spot_right[1] - tar_right/2) / (spot_right[1] + tar_right/2)
@@ -240,14 +244,40 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     #     "righ-mid": pol2cart(spot_right[0] +           00, spot_right[1] * right_scale ),
     #     "righ-bot": pol2cart(spot_right[0] - ang_up_right, spot_right[1] * right_scale ),
     # }
+
+    leftmid = [a-b for a,b in zip(pol2cart(spot_left[0]  +          00,  spot_left[1])  , [tar_left+1,0]  )]
+    [left_theta,left_radius] = cart2pol(leftmid[0], leftmid[1])
+
+
+    righmid = [a+b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [tar_right+1,0] )]
+    [righ_theta,righ_radius] = cart2pol(righmid[0], righmid[1])
+
+    # if hemifield == 'left' and spot_cart[1] < 0:
+    if spot_left_cart[1] < 0:
+        ang_up_left = (cart2pol(leftmid[0], leftmid[1] - size_left[1])[0] - left_theta) + 3
+    else:
+        ang_up_left = (cart2pol(leftmid[0], leftmid[1] + size_left[1])[0] - left_theta) + 3    
+
+    ang_up_right = (cart2pol(righmid[0], righmid[1] + size_right[1])[0] - righ_theta) + 3
+
+
     positions = {
-        "left-top": [a-b for a,b in zip(pol2cart(spot_left[0]  - ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
-        "left-mid": [a-b for a,b in zip(pol2cart(spot_left[0]  +          00,  spot_left[1])  , [tar_left+1,0]  )],
-        "left-bot": [a-b for a,b in zip(pol2cart(spot_left[0]  + ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
-        "righ-top": [a+b for a,b in zip(pol2cart(spot_right[0] + ang_up_right, spot_right[1]) , [tar_right+1,0] )],
-        "righ-mid": [a+b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [tar_right+1,0] )],
-        "righ-bot": [a+b for a,b in zip(pol2cart(spot_right[0] - ang_up_right, spot_right[1]) , [tar_right+1,0] )],
+        "left-top": pol2cart(left_theta  - ang_up_left,  left_radius  ),
+        "left-mid": pol2cart(left_theta  +          00,  left_radius  ),
+        "left-bot": pol2cart(left_theta  + ang_up_left,  left_radius  ),
+        "righ-top": pol2cart(right_theta + ang_up_right, right_radius ),
+        "righ-mid": pol2cart(right_theta +           00, right_radius ),
+        "righ-bot": pol2cart(right_theta - ang_up_right, right_radius ),
     }
+
+    # positions = {
+    #     "left-top": [a-b for a,b in zip(pol2cart(spot_left[0]  - ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
+    #     "left-mid": [a-b for a,b in zip(pol2cart(spot_left[0]  +          00,  spot_left[1])  , [tar_left+1,0]  )],
+    #     "left-bot": [a-b for a,b in zip(pol2cart(spot_left[0]  + ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
+    #     "righ-top": [a+b for a,b in zip(pol2cart(spot_right[0] + ang_up_right, spot_right[1]) , [tar_right+1,0] )],
+    #     "righ-mid": [a+b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [tar_right+1,0] )],
+    #     "righ-bot": [a+b for a,b in zip(pol2cart(spot_right[0] - ang_up_right, spot_right[1]) , [tar_right+1,0] )],
+    # }
 
     if hemifield == 'left':
         # First column is target, second column is foil
@@ -353,6 +383,9 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     intervals = [4.55, 3.9, 3.25, 2.6, 1.95, 1.3, 0.65, 0.0, -0.65, -1.3, -1.95, -2.6, -3.25, -3.9, -4.55]
     # increased steps to 0.7 throughout:
     # intervals = [4.9, 4.2, 3.5, 2.8, 2.1, 1.4, 0.7, 0.0, -0.7, -1.4, -2.1, -2.8, -3.5, -4.2, -4.9]
+
+    # a bit less increased:
+    intervals = [4.2, 3.6, 3.0, 2.4, 1.8, 1.2, 0.6, 0.0, -0.6, -1.2, -1.8, -2.4, -3.0, -3.6, -4.2]
 
     position = [[]] * 8
     trial_stair = [0] * 8
