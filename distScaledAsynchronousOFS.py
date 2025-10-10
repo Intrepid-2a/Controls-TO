@@ -217,35 +217,29 @@ def doDistScaledAsynchronousOFSTask(ID=None, hemifield=None, location=None):
 
     left_scale = (spot_left[1]  - tar_left/2)  / (spot_left[1]  + tar_left/2)
     right_scale = (spot_right[1] - tar_right/2) / (spot_right[1] + tar_right/2)
+    # left_scale = 1
+    # right_scale = 1
 
 
     ## prepare trials
-    # these are in polar coordinates, for both an inner and outer dot position:
-    # positions = {
-    #     "left-top": [(spot_left[0]  - ang_up_left,  spot_left[1]  - tar_left/2),  (spot_left[0]  - ang_up_left,  spot_left[1]  + tar_left/2)],
-    #     "left-mid": [(spot_left[0]  +          00,  spot_left[1]  - tar_left/2),  (spot_left[0]  +          00,  spot_left[1]  + tar_left/2)],
-    #     "left-bot": [(spot_left[0]  + ang_up_left,  spot_left[1]  - tar_left/2),  (spot_left[0]  + ang_up_left,  spot_left[1]  + tar_left/2)],
-    #     "righ-top": [(spot_right[0] + ang_up_right, spot_right[1] - tar_right/2), (spot_right[0] + ang_up_right, spot_right[1] + tar_right/2)],
-    #     "righ-mid": [(spot_right[0] +           00, spot_right[1] - tar_right/2), (spot_right[0] +           00, spot_right[1] + tar_right/2)],
-    #     "righ-bot": [(spot_right[0] - ang_up_right, spot_right[1] - tar_right/2), (spot_right[0] - ang_up_right, spot_right[1] + tar_right/2)],
-    # }
+
     # we want cartesian for this variant:
-    # positions = {
-    #     "left-top": pol2cart(spot_left[0]  - ang_up_left,  spot_left[1]  * left_scale  ),
-    #     "left-mid": pol2cart(spot_left[0]  +          00,  spot_left[1]  * left_scale  ),
-    #     "left-bot": pol2cart(spot_left[0]  + ang_up_left,  spot_left[1]  * left_scale  ),
-    #     "righ-top": pol2cart(spot_right[0] + ang_up_right, spot_right[1] * right_scale ),
-    #     "righ-mid": pol2cart(spot_right[0] +           00, spot_right[1] * right_scale ),
-    #     "righ-bot": pol2cart(spot_right[0] - ang_up_right, spot_right[1] * right_scale ),
-    # }
     positions = {
-        "left-top": [a*b for a,b in zip(pol2cart(spot_left[0]  - ang_up_left,  spot_left[1])  , [left_scale,1]  )],
-        "left-mid": [a*b for a,b in zip(pol2cart(spot_left[0]  +          00,  spot_left[1])  , [left_scale,1]  )],
-        "left-bot": [a*b for a,b in zip(pol2cart(spot_left[0]  + ang_up_left,  spot_left[1])  , [left_scale,1]  )],
-        "righ-top": [a*b for a,b in zip(pol2cart(spot_right[0] + ang_up_right, spot_right[1]) , [right_scale,1] )],
-        "righ-mid": [a*b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [right_scale,1] )],
-        "righ-bot": [a*b for a,b in zip(pol2cart(spot_right[0] - ang_up_right, spot_right[1]) , [right_scale,1] )],
+        "left-top": pol2cart( (spot_left[0]  - ang_up_left ) * left_scale,  spot_left[1] * left_scale   ),
+        "left-mid": pol2cart( (spot_left[0]  +          00 ) * left_scale,  spot_left[1] * left_scale   ),
+        "left-bot": pol2cart( (spot_left[0]  + ang_up_left ) * left_scale,  spot_left[1] * left_scale   ),
+        "righ-top": pol2cart( (spot_right[0] + ang_up_right) * right_scale, spot_right[1] * right_scale ),
+        "righ-mid": pol2cart( (spot_right[0] +           00) * right_scale, spot_right[1] * right_scale ),
+        "righ-bot": pol2cart( (spot_right[0] - ang_up_right) * right_scale, spot_right[1] * right_scale ),
     }
+    # positions = {
+    #     "left-top": [a*b for a,b in zip(pol2cart(spot_left[0]  - ang_up_left,  spot_left[1])  , [left_scale,1]  )],
+    #     "left-mid": [a*b for a,b in zip(pol2cart(spot_left[0]  +          00,  spot_left[1])  , [left_scale,1]  )],
+    #     "left-bot": [a*b for a,b in zip(pol2cart(spot_left[0]  + ang_up_left,  spot_left[1])  , [left_scale,1]  )],
+    #     "righ-top": [a*b for a,b in zip(pol2cart(spot_right[0] + ang_up_right, spot_right[1]) , [right_scale,1] )],
+    #     "righ-mid": [a*b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [right_scale,1] )],
+    #     "righ-bot": [a*b for a,b in zip(pol2cart(spot_right[0] - ang_up_right, spot_right[1]) , [right_scale,1] )],
+    # }
     
     if hemifield == 'left':
         # First column is target, second column is foil

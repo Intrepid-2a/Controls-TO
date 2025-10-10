@@ -245,20 +245,49 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     #     "righ-bot": pol2cart(spot_right[0] - ang_up_right, spot_right[1] * right_scale ),
     # }
 
-    leftmid = [a-b for a,b in zip(pol2cart(spot_left[0]  +          00,  spot_left[1])  , [tar_left+1,0]  )]
-    [left_theta,left_radius] = cart2pol(leftmid[0], leftmid[1])
+
+    # FIRST PROPER ATTEMPT, moving around pre-generated stuff:
+    # leftmid = [a-b for a,b in zip(pol2cart(spot_left[0]  +          00,  spot_left[1])  , [tar_left+1,0]  )]
+    # [left_theta,left_radius] = cart2pol(leftmid[0], leftmid[1])
 
 
-    righmid = [a+b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [tar_right+1,0] )]
-    [righ_theta,righ_radius] = cart2pol(righmid[0], righmid[1])
+    # righmid = [a+b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [tar_right+1,0] )]
+    # [righ_theta,righ_radius] = cart2pol(righmid[0], righmid[1])
 
     
-    if spot_left_cart[1] < 0:
-        ang_up_left = (cart2pol(leftmid[0], leftmid[1] - size_left[1])[0] - left_theta) + 3
-    else:
-        ang_up_left = (cart2pol(leftmid[0], leftmid[1] + size_left[1])[0] - left_theta) + 3    
+    # if spot_left_cart[1] < 0:
+    #     ang_up_left = (cart2pol(leftmid[0], leftmid[1] - size_left[1])[0] - left_theta) + 3
+    # else:
+    #     ang_up_left = (cart2pol(leftmid[0], leftmid[1] + size_left[1])[0] - left_theta) + 3    
 
-    ang_up_right = (cart2pol(righmid[0], righmid[1] + size_right[1])[0] - righ_theta) + 3
+    # ang_up_right = (cart2pol(righmid[0], righmid[1] + size_right[1])[0] - righ_theta) + 3
+
+    # HACKY VERSION, not accounting for eccentricity
+    # positions = {
+    #     "left-top": [a-b for a,b in zip(pol2cart(spot_left[0]  - ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
+    #     "left-mid": [a-b for a,b in zip(pol2cart(spot_left[0]  +          00,  spot_left[1])  , [tar_left+1,0]  )],
+    #     "left-bot": [a-b for a,b in zip(pol2cart(spot_left[0]  + ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
+    #     "righ-top": [a+b for a,b in zip(pol2cart(spot_right[0] + ang_up_right, spot_right[1]) , [tar_right+1,0] )],
+    #     "righ-mid": [a+b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [tar_right+1,0] )],
+    #     "righ-bot": [a+b for a,b in zip(pol2cart(spot_right[0] - ang_up_right, spot_right[1]) , [tar_right+1,0] )],
+    # }
+
+
+    # SECOND PROPER attempt, recalculate ang_ups from a moved blind spot marker
+    spot_left_cart_ecc  = [spot_left_cart[0]  - size_left[0]  - 4, spot_left_cart[1]]
+    spot_left_ecc       = cart2pol(spot_left_cart_ecc[0],  spot_left_cart_ecc[1])
+    spot_right_cart_ecc = [spot_right_cart[0] + size_right[0] + 4, spot_right_cart[1]]
+    spot_right_ecc      = cart2pol(spot_right_cart_ecc[0], spot_right_cart_ecc[1])
+
+
+    # let's respawn at the right position
+    # size of blind spot + 2 (dot width, padding)
+    if spot_left_cart[1] < 0
+        ang_up_left = (cart2pol(spot_left_cart_ecc[0], spot_left_cart_ecc[1] - spot_left_size[1])[0] - spot_left_ecc[0]) + 2
+    else:
+        ang_up_left = (cart2pol(spot_left_cart_ecc[0], spot_left_cart_ecc[1] + spot_left_size[1])[0] - spot_left_ecc[0]) + 2
+
+    ang_up_right = (cart2pol(spot_right_cart_ecc[0], spot_right_cart_ecc[1] + spot_right_size[1])[0] - spot_right_ecc[0]) + 2
 
 
     positions = {
@@ -269,15 +298,6 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
         "righ-mid": pol2cart(right_theta +           00, right_radius ),
         "righ-bot": pol2cart(right_theta - ang_up_right, right_radius ),
     }
-
-    # positions = {
-    #     "left-top": [a-b for a,b in zip(pol2cart(spot_left[0]  - ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
-    #     "left-mid": [a-b for a,b in zip(pol2cart(spot_left[0]  +          00,  spot_left[1])  , [tar_left+1,0]  )],
-    #     "left-bot": [a-b for a,b in zip(pol2cart(spot_left[0]  + ang_up_left,  spot_left[1])  , [tar_left+1,0]  )],
-    #     "righ-top": [a+b for a,b in zip(pol2cart(spot_right[0] + ang_up_right, spot_right[1]) , [tar_right+1,0] )],
-    #     "righ-mid": [a+b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [tar_right+1,0] )],
-    #     "righ-bot": [a+b for a,b in zip(pol2cart(spot_right[0] - ang_up_right, spot_right[1]) , [tar_right+1,0] )],
-    # }
 
     if hemifield == 'left':
         # First column is target, second column is foil
@@ -380,7 +400,7 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     # outer two moved by one original step:
     # intervals = [4.5, 3.5, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3.5, -4.5]
     # increased steps to 0.65 throughout:
-    intervals = [4.55, 3.9, 3.25, 2.6, 1.95, 1.3, 0.65, 0.0, -0.65, -1.3, -1.95, -2.6, -3.25, -3.9, -4.55]
+    # intervals = [4.55, 3.9, 3.25, 2.6, 1.95, 1.3, 0.65, 0.0, -0.65, -1.3, -1.95, -2.6, -3.25, -3.9, -4.55]
     # increased steps to 0.7 throughout:
     # intervals = [4.9, 4.2, 3.5, 2.8, 2.1, 1.4, 0.7, 0.0, -0.7, -1.4, -2.1, -2.8, -3.5, -4.2, -4.9]
 
