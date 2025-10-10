@@ -283,11 +283,11 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     # let's respawn at the right position
     # size of blind spot + 2 (dot width, padding)
     if spot_left_cart[1] < 0:
-        ang_up_left = (cart2pol(spot_left_cart_ecc[0], spot_left_cart_ecc[1] - spot_left_size[1])[0] - spot_left_ecc[0]) + 2
+        ang_up_left = (cart2pol(spot_left_cart_ecc[0], spot_left_cart_ecc[1] - size_left[1])[0] - spot_left_ecc[0]) + 2
     else:
-        ang_up_left = (cart2pol(spot_left_cart_ecc[0], spot_left_cart_ecc[1] + spot_left_size[1])[0] - spot_left_ecc[0]) + 2
+        ang_up_left = (cart2pol(spot_left_cart_ecc[0], spot_left_cart_ecc[1] + size_left[1])[0] - spot_left_ecc[0]) + 2
 
-    ang_up_right = (cart2pol(spot_right_cart_ecc[0], spot_right_cart_ecc[1] + spot_right_size[1])[0] - spot_right_ecc[0]) + 2
+    ang_up_right = (cart2pol(spot_right_cart_ecc[0], spot_right_cart_ecc[1] + size_right[1])[0] - spot_right_ecc[0]) + 2
 
 
     positions = {
