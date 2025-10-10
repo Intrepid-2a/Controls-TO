@@ -252,7 +252,7 @@ def doDistUpScaledAsynchronousTask(ID=None, hemifield=None, location=None):
     righmid = [a+b for a,b in zip(pol2cart(spot_right[0] +           00, spot_right[1]) , [tar_right+1,0] )]
     [righ_theta,righ_radius] = cart2pol(righmid[0], righmid[1])
 
-    # if hemifield == 'left' and spot_cart[1] < 0:
+    
     if spot_left_cart[1] < 0:
         ang_up_left = (cart2pol(leftmid[0], leftmid[1] - size_left[1])[0] - left_theta) + 3
     else:
