@@ -410,7 +410,7 @@ def doDistAsynchronousTask(ID=None, hemifield=None, location=None):
             trial_clock.reset()
             gaze_in_region = True
         
-            while trial_clock.getTime() <= 1.4 and not abort:
+            while trial_clock.getTime() <= 1.8 and not abort:
                 t = trial_clock.getTime()
                 
                 #!!# get position at each t
