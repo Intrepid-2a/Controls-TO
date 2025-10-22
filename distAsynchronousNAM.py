@@ -36,7 +36,7 @@ from EyeTracking import localizeSetup, EyeTracker
 #### Initialize experiment
 ######
 
-def doDistAsynchronousTask(ID=None, hemifield=None, location=None):
+def doDistAsynchronousNAMTask(ID=None, hemifield=None, location=None):
 
     ## parameters
     nRevs   = 10   #
