@@ -437,8 +437,8 @@ def getAsynchronouseRunDistanceDifferences(ID=None, hemifield=None, location=Non
         # left:  dir  = -1
         # right: dir  =  1
 
-        target_offsets.append(shift[0]*dir)
-        foil_offsets.append(shift[1]*dir)
+        target_offsets.append(shift[0])
+        foil_offsets.append(shift[1])
 
 
 
