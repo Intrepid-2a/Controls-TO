@@ -31,7 +31,7 @@ from itertools import compress
 
 import sys, os
 # sys.path.append(os.path.join('..', 'EyeTracking'))
-from distDiffEyeTracking import localizeSetup, EyeTracker
+from eccDiffEyeTracking import localizeSetup, EyeTracker
 
 import pandas as pd
 
@@ -62,12 +62,12 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
     os.makedirs(eyetracking_path, exist_ok=True)
 
 
-    # create output file:
-    x = 1
-    # filename = '_dist_' + ('LH' if hemifield == 'left' else 'RH') + '_' + ID + '_'
+    # # create output file:
+    # x = 1
+    # # filename = '_dist_' + ('LH' if hemifield == 'left' else 'RH') + '_' + ID + '_'
     filename = ID + '_disth_' + ('LH' if hemifield == 'left' else 'RH') + '_'
-    while (filename + str(x) + '.txt') in os.listdir(main_path):
-        x += 1
+    # while (filename + str(x) + '.txt') in os.listdir(main_path):
+    #     x += 1
     
     # find output file...
     participantfiles = list(glob( pathname=main_path+filename+'*.txt' ))
@@ -94,6 +94,9 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
         # that doesn't necessarily apply to other data sets !!!
         if responses.shape[0] == runtrials:
             break
+        # else:
+        #     # does this account for non-responses?
+        #     print('runtrials does not match response file')
 
     # print(responses.shape)
 
@@ -312,6 +315,9 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 
     recovered_distance_differences = [] # here we store the important stuff
 
+    target_offsets = []
+    foil_offsets = []
+
 
     for trial_idx in range(responses.shape[0]):
 
@@ -386,6 +392,13 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
         # print('recorded dif: %0.3f vs. recovered dif: %0.3f'%(dif, actualDistDiff))
 
         recovered_distance_differences.append(round(actualDistDiff,1))
+
+
+        # left:  dir  = -1
+        # right: dir  =  1
+
+        target_offsets.append(shift[0]*dir)
+        foil_offsets.append((shift[0]+shift[1])/2*dir)
 
         # else:
         #     point_3.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
@@ -556,6 +569,10 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
         abort = False
         # increment = True
         k = []
+        if (not(isinstance(resp, str))):
+            resp = '%s'%resp # force cast to string?
+        # print(resp)
+        # print(type(resp))
         if resp in ['abort','auto_abort']:
             abort = True
             increment = False
@@ -790,6 +807,8 @@ def getHorizontalRunDistanceDifferences(ID=None, hemifield=None, location=None, 
 #     win.close()
     responses['recoveredDiffs'] = recovered_distance_differences
     # print(respFileName)
+    responses['targOffset'] = target_offsets
+    responses['foilOffset'] = foil_offsets
 
     rec_path = '../data/recDistHorizontal/'
     recoveredFileName
