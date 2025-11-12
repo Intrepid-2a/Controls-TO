@@ -391,7 +391,7 @@ def getAsynchronouseRunDistanceDifferences(ID=None, hemifield=None, location=Non
         shift = random.sample([-1, -.5, 0, .5, 1], 2) # used to be [-1, -.5, 0, .5, .1]
         dif = intervals[cur_int[which_stair]] * foil_type[which_stair]
         which_first = random.choice(['Targ', 'Foil'])
-
+        # print(shift)
 
         trial_response = dict(responses.iloc[trial_idx])
         stair_previous_resp[trial_response['Stair']] = trial_response['Resp']
@@ -410,18 +410,21 @@ def getAsynchronouseRunDistanceDifferences(ID=None, hemifield=None, location=Non
 
 
 
-        if which_first == 'Targ':
-            point_1.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
-            point_2.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
-            point_3.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
-            point_4.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
-        else:
-            point_3.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
-            point_4.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
-            point_1.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
-            point_2.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
+        # if which_first == 'Targ':
+        #     point_1.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
+        #     point_2.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
+        #     point_3.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
+        #     point_4.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
+        # else:
+        #     point_3.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
+        #     point_4.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
+        #     point_1.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
+        #     point_2.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
 
-
+        point_1.pos = (positions[pos[0]][0]             + shift[0] -(tar/2)*dir, positions[pos[0]][1])
+        point_2.pos = (positions[pos[0]][0]             + shift[0] +(tar/2)*dir, positions[pos[0]][1])
+        point_3.pos = (positions[pos[1]][0]             + shift[1] -(tar/2)*dir, positions[pos[1]][1])
+        point_4.pos = (positions[pos[1]][0] + (dif*dir) + shift[1] +(tar/2)*dir, positions[pos[1]][1])
 
         targ_dist = ((point_1.pos[0] - point_2.pos[0])**2 + (point_1.pos[1] - point_2.pos[1])**2)**0.5
         foil_dist = ((point_3.pos[0] - point_4.pos[0])**2 + (point_3.pos[1] - point_4.pos[1])**2)**0.5
@@ -435,7 +438,7 @@ def getAsynchronouseRunDistanceDifferences(ID=None, hemifield=None, location=Non
         # right: dir  =  1
 
         target_offsets.append(shift[0]*dir)
-        foil_offsets.append(shift[0]*dir)
+        foil_offsets.append(shift[1]*dir)
 
 
 
