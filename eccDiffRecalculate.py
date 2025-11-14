@@ -3,6 +3,7 @@ import pandas as pd
 from eccDiffsHorizontal import *
 from eccDiffsAsynchronous import *
 from eccDiffsUpScaledAsynchronous import *
+from eccDiffsDistance import *
 
 
 def recalculateDistances(task):
@@ -18,6 +19,10 @@ def recalculateDistances(task):
 
         plog = log[log['ID'] == participant]
         # print(plog)
+
+        if task == 'distance':
+            if participant in ['tor64d21e', 'tor7ca90a', 'tora05f8a']:
+                continue
 
         for hemifield in ['LH', 'RH']:
         # for hemifield in ['LH']:
@@ -38,4 +43,7 @@ def recalculateDistances(task):
             if task == 'distUpScaledAsynchronous':
                 getUpScaledAsynchronousRunDistanceDifferences(ID=participant, hemifield={'LH':'left', 'RH':'right'}[hemifield], location='toronto', runtrials=ntrials, log=hlog)
             # print('done?\n')
+
+            if task == 'distance':
+                getDistanceRunDistanceDifferences(ID=participant, hemifield={'LH':'left', 'RH':'right'}[hemifield], location='toronto', runtrials=ntrials, log=hlog)
 
