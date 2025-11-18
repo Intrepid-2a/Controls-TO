@@ -605,7 +605,9 @@ def doDistBinocHorizontalTask(ID=None, hemifield=None, location=None):
                                         # eye[which_stair],
                                         gaze_out,
                                         which_stair,
-                                        trial])) + "\n")
+                                        trial,
+                                        shift[0],
+                                        shift[1]])) + "\n")
         respFile.close()
         trial += 1
         break_trial += 1
