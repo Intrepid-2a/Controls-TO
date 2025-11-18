@@ -504,7 +504,7 @@ class MyFrame(wx.Frame):
 
 
         # if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.upturned_color.Id, self.asynchronous_color.Id, self.scaledasynch_color.Id, self.binocular_color.Id]:
-        if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.asynchronous_color.Id, self.upscasynch_color.Id, self.binchor_color.Id]:
+        if buttonId in [self.horizontal_color.Id, self.scaled_color.Id, self.asynchronous_color.Id, self.upscasynch_color.Id, self.binochor_color.Id]:
             subtask = 'color'
         # if buttonId in [self.horizontal_mapping.Id, self.scaled_mapping.Id, self.upturned_mapping.Id, self.asynchronous_mapping.Id, self.scaledasynch_mapping.Id, self.binocular_mapping.Id]:
         if buttonId in [self.horizontal_mapping.Id, self.scaled_mapping.Id, self.asynchronous_mapping.Id, self.upscasynch_mapping.Id, self.binochor_mapping.Id]:
