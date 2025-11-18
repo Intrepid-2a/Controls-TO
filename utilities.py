@@ -214,7 +214,20 @@ def getParticipantTaskInfo(ID):
 
     info = {}
 
-    for task in ['distance', 'distHorizontal', 'distScaled', 'distUpturned', 'distBinocular', 'distAsynchronous', 'distUpScaledAsynchronous', 'distScaledAsynchronous', 'distScaledAsynchronousOFS']:
+    tasks = [
+        # 'distance', 
+        'distHorizontal', 
+        'distScaled', 
+        # 'distUpturned', 
+        # 'distBinocular', 
+        'distAsynchronous', 
+        'distUpScaledAsynchronous', 
+        # 'distScaledAsynchronous', 
+        # 'distScaledAsynchronousOFS'
+        'distBinocHorizontal',
+        ]
+
+    for task in tasks:
         info[task] = {}
         subtasks = ['color','mapping','RH','LH']
         # if task == 'distBinocular':
@@ -240,31 +253,40 @@ def getGeneralDataInfo():
     # tasks = ['distance',
     #          'area',
     #          'curvature']
-    tasks = ['distance',
+    tasks = [
+            # 'distance',
              'distHorizontal',
             #  'distBinocular',
              'distScaled',
             #  'distUpturned',
              'distAsynchronous',
              'distUpScaledAsynchronous',
-             'distScaledAsynchronous',
-             'distScaledAsynchronousOFS']
+            #  'distScaledAsynchronous',
+            #  'distScaledAsynchronousOFS'
+             'distBinocHorizontal',
+             ]
     subtasks = ['',
                 'color',
                 'mapping']
 
     allParticipantIDs = []
-    taskParticipants = {'distance':[],
-                        # 'area':[],
-                        # 'curvature':[],
-                        'distHorizontal':[],
-                        # 'distBinocular':[],
-                        'distScaled':[],
-                        # 'distUpturned':[],
-                        'distAsynchronous':[],
-                        'distUpScaledAsynchronous':[],
-                        'distScaledAsynchronous':[],
-                        'distScaledAsynchronousOFS':[]}
+    taskParticipants = {}
+    for task in tasks:
+        taskParticipants[task] = []
+    # taskParticipants = {
+    #                     # 'distance':[],
+    #                     # 'area':[],
+    #                     # 'curvature':[],
+    #                     'distHorizontal':[],
+    #                     # 'distBinocular':[],
+    #                     'distScaled':[],
+    #                     # 'distUpturned':[],
+    #                     'distAsynchronous':[],
+    #                     'distUpScaledAsynchronous':[],
+    #                     # 'distScaledAsynchronous':[],
+    #                     # 'distScaledAsynchronousOFS':[]
+    #                     'distBinocHorizontal':[],
+    #                     }
 
 
     for task in tasks:
@@ -280,9 +302,9 @@ def getGeneralDataInfo():
 
         for ID in list(set(taskIDs)):
             # check if there exists a LH and RH file for each participant for this task
-            if task == 'distance':
-                basename = os.path.join('..', 'data', task, ID + '_dist')
-            elif task == 'distHorizontal':
+            # if task == 'distance':
+            #     basename = os.path.join('..', 'data', task, ID + '_dist')
+            if task == 'distHorizontal':
                 basename = os.path.join('..', 'data', task, ID + '_disth')
             elif task == 'distScaled':
                 basename = os.path.join('..', 'data', task, ID + '_dists')
@@ -292,14 +314,16 @@ def getGeneralDataInfo():
             #     basename = os.path.join('..', 'data', task, ID + '_distt')
             elif task == 'distAsynchronous':
                 basename = os.path.join('..', 'data', task, ID + '_dista')
-            elif task == 'distScaledAsynchronous':
-                basename = os.path.join('..', 'data', task, ID + '_distsa')
+            # elif task == 'distScaledAsynchronous':
+            #     basename = os.path.join('..', 'data', task, ID + '_distsa')
             elif task == 'distUpScaledAsynchronous':
                 basename = os.path.join('..', 'data', task, ID + '_distusa')
-            elif task == 'distScaledAsynchronousOFS':
-                basename = os.path.join('..', 'data', task, ID + '_distsao')
-            else:
-                basename = os.path.join('..', 'data', task, ID + '_' + task)
+            # elif task == 'distScaledAsynchronousOFS':
+            #     basename = os.path.join('..', 'data', task, ID + '_distsao')
+            # else:
+            #     basename = os.path.join('..', 'data', task, ID + '_' + task)
+            elif task == 'distBinocHorizontal':
+                basename = os.path.join('..', 'data', task, ID + '_distbh')
 
             # if task == 'distBinocular':
             #     done = glob.glob(basename + '_run_*.txt')
@@ -329,20 +353,22 @@ def getGeneralDataInfo():
 
     # taskParticipants['all'] = list(set(taskParticipants['area']).intersection(set(taskParticipants['curvature'])).intersection(set(taskParticipants['distance'])).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distBinocular'])))
     # taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distUpturned'])).intersection(set(taskParticipants['distAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronous'])))
-    taskParticipants['all'] = list(set(taskParticipants['distance']).intersection(set(taskParticipants['distHorizontal'])).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distAsynchronous'])).intersection(set(taskParticipants['distUpScaledAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronous'])).intersection(set(taskParticipants['distScaledAsynchronousOFS'])))
+    taskParticipants['all'] = list(set(taskParticipants['distHorizontal']).intersection(set(taskParticipants['distScaled'])).intersection(set(taskParticipants['distAsynchronous'])).intersection(set(taskParticipants['distUpScaledAsynchronous'])).intersection(set(taskParticipants['distBinocHorizontal'])))
 
     bytask = { 
             #    'area'                      :           taskParticipants['area'], 
             #    'curvature'                 :      taskParticipants['curvature'], 
-               'distance'                  :       taskParticipants['distance'],
+            #    'distance'                  :       taskParticipants['distance'],
                'distHorizontal'            : taskParticipants['distHorizontal'],
             #    'distBinocular'             :  taskParticipants['distBinocular'],
                'distScaled'                :  taskParticipants['distScaled'],
             #    'distUpturned'              :  taskParticipants['distUpturned'], 
                'distAsynchronous'          : taskParticipants['distAsynchronous'],
                'distUpScaledAsynchronous'  : taskParticipants['distUpScaledAsynchronous'],
-               'distScaledAsynchronous'    : taskParticipants['distScaledAsynchronous'],
-               'distScaledAsynchronousOFS' : taskParticipants['distScaledAsynchronousOFS']}
+            #    'distScaledAsynchronous'    : taskParticipants['distScaledAsynchronous'],
+            #    'distScaledAsynchronousOFS' : taskParticipants['distScaledAsynchronousOFS']
+               'distBinocHorizontal'       : taskParticipants['distBinocHorizontal'],
+               }
 
     for key in taskParticipants.keys():
         taskParticipants[key] = len(taskParticipants[key])
