@@ -96,7 +96,7 @@ class MyFrame(wx.Frame):
         self.upscasynch_right = wx.Button(self, -1, "right")
 
         self.binochor_count = wx.StaticText(self, -1, "#")
-        self.binochor_text = wx.StaticText(self, -1, "Binoc. Horizontal:")
+        self.binochor_text = wx.StaticText(self, -1, "Binoc. Hor.:")
         self.binochor_color = wx.Button(self, -1, "color")
         self.binochor_mapping = wx.Button(self, -1, "mapping")
         self.binochor_left = wx.Button(self, -1, "left")
