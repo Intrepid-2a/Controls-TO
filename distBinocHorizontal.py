@@ -338,6 +338,7 @@ def doDistBinocHorizontalTask(ID=None, hemifield=None, location=None, addAsynchr
 
         increment = True
 
+        print(stairs_ongoing)
         ## choose staircase
         which_stair = random.choice(list(compress([x for x in range(len(stairs_ongoing))], stairs_ongoing)))
 
@@ -661,7 +662,8 @@ def doDistBinocHorizontalTask(ID=None, hemifield=None, location=None, addAsynchr
             # eye[which_stair],
             gaze_out,
             which_stair,
-            trial)
+            trial,
+            stimtiming)
         respFile = open(respFileName,'a')
         respFile.write('\t'.join(map(str, [resp,
                                         pos[0],
