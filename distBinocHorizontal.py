@@ -36,7 +36,7 @@ from EyeTracking import localizeSetup, EyeTracker
 #### Initialize experiment
 ######
 
-def doDistBinocHorizontalTask(ID=None, hemifield=None, location=None):
+def doDistBinocHorizontalTask(ID=None, hemifield=None, location=None, addAsynchronous=True):
 
     ## parameters
     nRevs   = 10   #
@@ -114,21 +114,22 @@ def doDistBinocHorizontalTask(ID=None, hemifield=None, location=None):
                                     'Stair',
                                     'Trial',
                                     'targOffset',
-                                    'foilOffset' ])) + '\n')
+                                    'foilOffset',
+                                    'timing' ])) + '\n')
     respFile.close()
     print(datetime.datetime.now().strftime("%Y-%m-%d-%H-%M"))
-    print("Resp",
-        "Targ_loc",
-        "Foil_loc",
-        "Targ_len",
-        "Difference",
-        "Which_first",
-        "Targ_chosen",
-        "Reversal",
-        "Foil_type",
-        # "Eye",
-        "Gaze_out",
-        "Stair")
+    # print("Resp",
+    #     "Targ_loc",
+    #     "Foil_loc",
+    #     "Targ_len",
+    #     "Difference",
+    #     "Which_first",
+    #     "Targ_chosen",
+    #     "Reversal",
+    #     "Foil_type",
+    #     # "Eye",
+    #     "Gaze_out",
+    #     "Stair")   # unnecessary?
 
 
     x = 1
@@ -306,16 +307,27 @@ def doDistBinocHorizontalTask(ID=None, hemifield=None, location=None):
     foil_type =  [      1,     -1,       1,      -1 ]
     # eye =        [ 'left', 'left', 'right', 'right' ] # not using this anymore!
     pos_arrays = [ pos_array_bsa[:]] * 2 + [pos_array_out[:]] * 2
+    timing     = ['overlap'] * 4
+
+    multfact = 2
+
+    if addAsynchronous:
+        foil_type = foil_type * 2
+        pos_arrays = pos_arrays * 2
+        timing = timing + ['asynchronous'] * 4
+        multfact = 4
 
     intervals = [3.5, 3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3.5]
-    position = [[]] * 4
-    trial_stair = [0] * 4
-    revs = [0] * 4
-    direction = [1] * 4
-    cur_int = [0] * 4
+
+
+    position = [[]] * (2 * multfact)
+    trial_stair = [0] * (2 * multfact)
+    revs = [0] * (2 * multfact)
+    direction = [1] * (2 * multfact)
+    cur_int = [0] * (2 * multfact)
     reversal = False
-    resps = [[True],[False]] * 2
-    stairs_ongoing = [True] * 4
+    resps = [[True],[False]] * multfact
+    stairs_ongoing = [True] * (2 * multfact)
 
     trial = 1
     abort = False
@@ -369,8 +381,16 @@ def doDistBinocHorizontalTask(ID=None, hemifield=None, location=None):
         # should the trial start be here, or maybe when waiting for fixation?
         tracker.comment('start trial %d'%(trial))
 
-        # in reverse order, so we can pop() them off:
-        stim_comments = ['pair 2 off', 'pair 1 off', 'pair 2 on', 'pair 1 on']
+
+        stimtiming = timing[which_stair]
+
+        if stimtiming == 'overlap':
+            # in reverse order, so we can pop() them off:
+            stim_comments = ['pair 2 off', 'pair 1 off', 'pair 2 on', 'pair 1 on']
+
+        if stimtiming == 'asynchronous':
+            stim_comments = ['pair 2 off', 'pair 2 on', 'pair 1 off', 'pair 1 on']
+            
 
 
         if not gaze_out:
@@ -378,55 +398,105 @@ def doDistBinocHorizontalTask(ID=None, hemifield=None, location=None):
             
             trial_clock.reset()
             gaze_in_region = True
-        
-            while trial_clock.getTime() < 1.3 and not abort:
-                t = trial_clock.getTime()
-                
-                #!!# get position at each t
-                #!!# if position is invalid or >2 dva, set gaze in region to False
-                #!!# may also record gazes in file here and do stuff like showing gaze position if simulating with mouse
-                
-                if not tracker.gazeInFixationWindow():
-                    gaze_out = True
-                    tracker.comment('trial aborted')
-                    break
 
-                fixation.draw()
-                blindspot.draw()
-                hiFusion.draw()
-                loFusion.draw()
 
-                if .1 <= trial_clock.getTime() < .5:
-                    if len(stim_comments) == 4:
-                        tracker.comment(stim_comments.pop()) # pair 1 on
-                    point_1.draw()
-                    point_2.draw()
-                elif .5 <= trial_clock.getTime() < 0.9:
-                    if len(stim_comments) == 3:
-                        tracker.comment(stim_comments.pop()) # pair 2 on
-                    point_1.draw()
-                    point_2.draw()
-                    point_3.draw()
-                    point_4.draw()
-                elif 0.9 <= trial_clock.getTime() < 1.3:
-                    if len(stim_comments) == 2:
-                        tracker.comment(stim_comments.pop()) # pair 1 off
-                    point_3.draw()
-                    point_4.draw()
-        
-                blindspot.draw()
-                win.flip()
-                
-                k = event.getKeys(['q']) # shouldn't this be space? like after the stimulus? this is confusing...
-                if k and 'q' in k:
-                    abort = True
-                    tracker.comment('trial aborted') # task aborted?
-                    break
-                
-                event.clearEvents(eventType='keyboard') # just to be sure?
+            if stimtiming == 'overlap':
+                while trial_clock.getTime() < 1.3 and not abort:
+                    t = trial_clock.getTime()
+                    
+                    #!!# get position at each t
+                    #!!# if position is invalid or >2 dva, set gaze in region to False
+                    #!!# may also record gazes in file here and do stuff like showing gaze position if simulating with mouse
+                    
+                    if not tracker.gazeInFixationWindow():
+                        gaze_out = True
+                        tracker.comment('trial aborted')
+                        break
 
-            if len(stim_comments) == 1:
-                tracker.comment(stim_comments.pop()) # pair 2 off
+                    fixation.draw()
+                    blindspot.draw()
+                    hiFusion.draw()
+                    loFusion.draw()
+
+                    if .1 <= trial_clock.getTime() < .5:
+                        if len(stim_comments) == 4:
+                            tracker.comment(stim_comments.pop()) # pair 1 on
+                        point_1.draw()
+                        point_2.draw()
+                    elif .5 <= trial_clock.getTime() < 0.9:
+                        if len(stim_comments) == 3:
+                            tracker.comment(stim_comments.pop()) # pair 2 on
+                        point_1.draw()
+                        point_2.draw()
+                        point_3.draw()
+                        point_4.draw()
+                    elif 0.9 <= trial_clock.getTime() < 1.3:
+                        if len(stim_comments) == 2:
+                            tracker.comment(stim_comments.pop()) # pair 1 off
+                        point_3.draw()
+                        point_4.draw()
+            
+                    blindspot.draw()
+                    win.flip()
+                    
+                    k = event.getKeys(['q']) # shouldn't this be space? like after the stimulus? this is confusing...
+                    if k and 'q' in k:
+                        abort = True
+                        tracker.comment('trial aborted') # task aborted?
+                        break
+                    
+                    event.clearEvents(eventType='keyboard') # just to be sure?
+
+                if len(stim_comments) == 1:
+                    tracker.comment(stim_comments.pop()) # pair 2 off
+
+            if stimtiming == 'asynchronous':
+                while trial_clock.getTime() <= 1.4 and not abort:
+                    t = trial_clock.getTime()
+                    
+                    #!!# get position at each t
+                    #!!# if position is invalid or >2 dva, set gaze in region to False
+                    #!!# may also record gazes in file here and do stuff like showing gaze position if simulating with mouse
+                    
+                    if not tracker.gazeInFixationWindow():
+                        gaze_out = True
+                        tracker.comment('trial aborted')
+                        break
+
+                    fixation.draw()
+                    blindspot.draw()
+                    hiFusion.draw()
+                    loFusion.draw()
+
+                    if .1 <= trial_clock.getTime() < .7:
+                        if len(stim_comments) == 4:
+                            tracker.comment(stim_comments.pop()) # pair 1 on
+                        point_1.draw()
+                        point_2.draw()
+                    if .7 <= trial_clock.getTime() < .8:
+                        if len(stim_comments) == 3:
+                            tracker.comment(stim_comments.pop()) # pair 1 off
+                    if .8 <= trial_clock.getTime() < 1.4:
+                        if len(stim_comments) == 2:
+                            tracker.comment(stim_comments.pop()) # pair 2 on
+                        point_3.draw()
+                        point_4.draw()
+
+            
+                    blindspot.draw()
+                    win.flip()
+                    
+                    k = event.getKeys(['q']) # quit / abort during trial
+                    if k and 'q' in k:
+                        abort = True
+                        tracker.comment('trial aborted') # task aborted?
+                        break
+                    
+                    event.clearEvents(eventType='keyboard') # just to be sure?
+
+                if len(stim_comments) == 1:
+                    tracker.comment(stim_comments.pop()) # pair 2 off
+
 
         if abort:
             break
@@ -607,7 +677,8 @@ def doDistBinocHorizontalTask(ID=None, hemifield=None, location=None):
                                         which_stair,
                                         trial,
                                         shift[0],
-                                        shift[1]])) + "\n")
+                                        shift[1],
+                                        stimtiming])) + "\n")
         respFile.close()
         trial += 1
         break_trial += 1
